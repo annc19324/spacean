@@ -8,6 +8,22 @@ const register = async (req, res) => {
     try {
         const { username, password } = req.body;
 
+        // Validation rules
+        const usernameRegex = /^[a-zA-Z0-9.]{6,}$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+        if (!usernameRegex.test(username)) {
+            return res.status(400).json({
+                message: 'Username phải ít nhất 6 kí tự, bao gồm chữ thường, chữ hoa, số và dấu chấm.'
+            });
+        }
+
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({
+                message: 'Password phải ít nhất 8 kí tự, bao gồm ít nhất 1 chữ thường, 1 chữ hoa, 1 số và 1 kí tự đặc biệt.'
+            });
+        }
+
         // Check if user exists
         const existingUser = await prisma.user.findUnique({
             where: { username },

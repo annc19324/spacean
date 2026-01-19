@@ -101,5 +101,11 @@ git push
 - Cập nhật `Home.js` chuyển trọng tâm sang khám phá "Không gian" (Spaces) của các User.
 - Bổ sung các nút tương tác (Thích, Ghét, Tải về) với hiệu ứng cập nhật dữ liệu thời gian thực.
 
+## 9. Cấu hình Validation & Fix Prisma 7
+- Triển khai xác thực (validation) cho Username: ít nhất 6 ký tự, gồm chữ thường, hoa, số và dấu chấm.
+- Triển khai xác thực cho Password: ít nhất 8 ký tự, gồm chữ thường, hoa, số và ký tự đặc biệt.
+- Cập nhật cả Backend (Controller) và Frontend (Register page) để đồng bộ quy tắc xác thực.
+- Khắc phục lỗi tương thích Prisma 7 bằng cách hạ cấp xuống Prisma 6.2.1 để đảm bảo tính ổn định với cấu hình hiện tại.
+
 ---
 *Ghi chú: Nhật ký này sẽ được cập nhật khi có các lệnh quan trọng tiếp theo.*

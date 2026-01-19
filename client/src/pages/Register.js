@@ -14,6 +14,21 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+
+        // Frontend validation
+        const usernameRegex = /^[a-zA-Z0-9.]{6,}$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+        if (!usernameRegex.test(username)) {
+            setError('Username phải ít nhất 6 kì tự, bao gồm chữ thường, chữ hoa, số và dấu chấm.');
+            return;
+        }
+
+        if (!passwordRegex.test(password)) {
+            setError('Password phải ít nhất 8 kí tự, bao gồm ít nhất 1 chữ thường, 1 chữ hoa, 1 số và 1 kí tự đặc biệt.');
+            return;
+        }
+
         try {
             const res = await axios.post('http://localhost:5000/api/auth/register', { username, password });
             setSuccess(true);
@@ -59,6 +74,9 @@ const Register = () => {
                                     required
                                 />
                             </div>
+                            <small style={{ display: 'block', marginTop: '5px', fontSize: '0.75rem', color: '#64748b' }}>
+                                Ít nhất 6 kí tự (a-z, A-Z, 0-9, .)
+                            </small>
                         </div>
 
                         <div style={{ marginBottom: '30px' }}>
@@ -73,6 +91,9 @@ const Register = () => {
                                     required
                                 />
                             </div>
+                            <small style={{ display: 'block', marginTop: '5px', fontSize: '0.75rem', color: '#64748b' }}>
+                                Ít nhất 8 kí tự (hoa, thường, số, đặc biệt)
+                            </small>
                         </div>
 
                         <button type="submit" className="btn-primary" style={{ width: '100%' }}>Tạo tài khoản</button>
