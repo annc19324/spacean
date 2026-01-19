@@ -166,6 +166,7 @@ const Dashboard = () => {
                             passwordData={passwordData}
                             setPasswordData={setPasswordData}
                             handleChangePassword={handleChangePassword}
+                            token={token}
                         />
                     )}
 
@@ -182,46 +183,46 @@ const Dashboard = () => {
                         <h2 style={{ marginBottom: '25px' }}>{isEditing ? 'Cập nhật ứng dụng' : 'Đăng ứng dụng mới'}</h2>
                         <form onSubmit={handleAppSubmit}>
                             <div style={{ marginBottom: '15px' }}>
-                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Tên ứng dụng *</label>
-                                <input required style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white' }} value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
+                                <label>Tên ứng dụng *</label>
+                                <input required style={{ width: '100%' }} value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
                             </div>
                             <div style={{ marginBottom: '15px' }}>
-                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Mô tả ngắn</label>
-                                <textarea style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white', height: '80px' }} value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
+                                <label>Mô tả ngắn</label>
+                                <textarea style={{ width: '100%' }} value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
                             </div>
                             <div style={{ marginBottom: '15px' }}>
-                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Loại hình</label>
-                                <select style={{ width: '100%', background: 'rgba(255,255,255,0.1)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white' }} value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value })}>
+                                <label>Loại hình</label>
+                                <select style={{ width: '100%' }} value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value })}>
                                     <option value="WEB" style={{ background: '#05070a' }}>Trang Web (Link)</option>
                                     <option value="APP" style={{ background: '#05070a' }}>Ứng dụng (Tải về)</option>
                                 </select>
                             </div>
                             {formData.type === 'WEB' ? (
                                 <div style={{ marginBottom: '15px' }}>
-                                    <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Đường dẫn Web (URL)</label>
-                                    <input style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white' }} value={formData.link} onChange={e => setFormData({ ...formData, link: e.target.value })} />
+                                    <label>Đường dẫn Web (URL)</label>
+                                    <input style={{ width: '100%' }} value={formData.link} onChange={e => setFormData({ ...formData, link: e.target.value })} />
                                 </div>
                             ) : (
                                 <div style={{ marginBottom: '15px' }}>
-                                    <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>File ứng dụng</label>
+                                    <label>File ứng dụng</label>
                                     <div style={{ display: 'flex', gap: '10px' }}>
-                                        <input style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white' }} value={formData.downloadUrl} onChange={e => setFormData({ ...formData, downloadUrl: e.target.value })} placeholder="Dán link hoặc chọn file..." />
+                                        <input style={{ flex: 1 }} value={formData.downloadUrl} onChange={e => setFormData({ ...formData, downloadUrl: e.target.value })} placeholder="Dán link hoặc chọn file..." />
                                         <input type="file" id="appField" hidden onChange={e => handleFileUpload(e, 'downloadUrl')} />
-                                        <label htmlFor="appField" style={{ background: 'rgba(255,255,255,0.1)', padding: '10px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem', display: 'flex', alignItems: 'center' }}>Chọn File</label>
+                                        <label htmlFor="appField" className="btn-secondary" style={{ padding: '8px 15px', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>Chọn File</label>
                                     </div>
                                 </div>
                             )}
                             <div style={{ marginBottom: '25px' }}>
-                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Ảnh minh họa</label>
+                                <label>Ảnh minh họa</label>
                                 <div style={{ display: 'flex', gap: '10px' }}>
-                                    <input style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white' }} value={formData.imageUrl} onChange={e => setFormData({ ...formData, imageUrl: e.target.value })} placeholder="Dán link ảnh hoặc chọn file..." />
+                                    <input style={{ flex: 1 }} value={formData.imageUrl} onChange={e => setFormData({ ...formData, imageUrl: e.target.value })} placeholder="Dán link ảnh hoặc chọn file..." />
                                     <input type="file" id="imageField" hidden accept="image/*" onChange={e => handleFileUpload(e, 'imageUrl')} />
-                                    <label htmlFor="imageField" style={{ background: 'rgba(255,255,255,0.1)', padding: '10px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem', display: 'flex', alignItems: 'center' }}>Chọn Ảnh</label>
+                                    <label htmlFor="imageField" className="btn-secondary" style={{ padding: '8px 15px', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>Chọn Ảnh</label>
                                 </div>
-                                {formData.imageUrl && <img src={formData.imageUrl} alt="Preview" style={{ marginTop: '10px', width: '100%', maxHeight: '100px', objectFit: 'cover', borderRadius: '8px' }} />}
+                                {formData.imageUrl && <img src={formData.imageUrl} alt="Preview" style={{ marginTop: '10px', width: '100%', maxHeight: '150px', objectFit: 'cover', borderRadius: '12px' }} />}
                             </div>
                             <div style={{ display: 'flex', gap: '10px' }}>
-                                <button type="button" onClick={() => setShowModal(false)} style={{ flex: 1, padding: '12px', background: 'transparent', border: '1px solid var(--glass-border)', color: 'white', borderRadius: '10px', cursor: 'pointer' }}>Hủy</button>
+                                <button type="button" onClick={() => setShowModal(false)} className="btn-secondary" style={{ flex: 1 }}>Hủy</button>
                                 <button type="submit" className="btn-primary" style={{ flex: 1 }}>{isEditing ? 'Lưu thay đổi' : 'Đăng ngay'}</button>
                             </div>
                         </form>

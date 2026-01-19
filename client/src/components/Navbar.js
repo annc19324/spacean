@@ -30,6 +30,9 @@ const Navbar = () => {
             <div style={{ display: 'flex', gap: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
                 {user ? (
                     <>
+                        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <LayoutGrid size={18} /> Trang chủ
+                        </Link>
                         <Link to={`/user/${user.username}`} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                             <LayoutGrid size={18} /> Hồ sơ cá nhân
                         </Link>
@@ -55,11 +58,11 @@ const Navbar = () => {
                     </>
                 ) : (
                     <>
-                        <Link to="/login" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <Link to="/login" className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '8px 16px' }}>
                             <LogIn size={18} /> Đăng nhập
                         </Link>
                         <Link to="/register" className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                            <UserPlus size={18} /> Tham gia
+                            <UserPlus size={18} /> Đăng ký
                         </Link>
                     </>
                 )}

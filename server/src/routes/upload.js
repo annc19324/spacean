@@ -1,30 +1,33 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const path = require('path');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const { verifyToken } = require('../middlewares/authMiddleware');
 
-// Storage configuration
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    }
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const upload = multer({
-    storage,
-    limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'spacean',
+        resource_type: 'auto',
+        allowed_formats: ['jpg', 'png', 'jpeg', 'gif', 'pdf', 'zip', 'apk']
+    },
 });
+
+const upload = multer({ storage: storage });
 
 router.post('/', verifyToken, upload.single('file'), (req, res) => {
     if (!req.file) {
         return res.status(400).json({ message: 'Không có file nào được tải lên.' });
     }
-    const fileUrl = `http://localhost:5000/uploads/${req.file.filename}`;
-    res.json({ url: fileUrl });
+    // Cloudinary returns the URL in req.file.path or req.file.secure_url
+    res.json({ url: req.file.path || req.file.secure_url });
 });
 
 module.exports = router;

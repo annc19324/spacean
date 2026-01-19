@@ -218,6 +218,70 @@ const downloadApp = async (req, res) => {
     }
 };
 
+const unlikeApp = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.id;
+
+        const existing = await prisma.interaction.findUnique({
+            where: { userId_appId: { userId, appId: id } }
+        });
+
+        if (!existing || existing.type !== 'LIKE') {
+            return res.status(400).json({ message: 'Bạn chưa thích ứng dụng này.' });
+        }
+
+        await prisma.interaction.delete({
+            where: { userId_appId: { userId, appId: id } }
+        });
+
+        const app = await prisma.app.update({
+            where: { id },
+            data: {
+                likes: { decrement: 1 },
+                user: { update: { likes: { decrement: 1 } } }
+            }
+        });
+
+        res.json({ message: 'Đã bỏ thích!', likes: app.likes });
+    } catch (error) {
+        console.error("Internal Error in unlikeApp:", error);
+        res.status(500).json({ message: 'Lỗi server.' });
+    }
+};
+
+const undislikeApp = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.id;
+
+        const existing = await prisma.interaction.findUnique({
+            where: { userId_appId: { userId, appId: id } }
+        });
+
+        if (!existing || existing.type !== 'DISLIKE') {
+            return res.status(400).json({ message: 'Bạn chưa ghét ứng dụng này.' });
+        }
+
+        await prisma.interaction.delete({
+            where: { userId_appId: { userId, appId: id } }
+        });
+
+        const app = await prisma.app.update({
+            where: { id },
+            data: {
+                dislikes: { decrement: 1 },
+                user: { update: { dislikes: { decrement: 1 } } }
+            }
+        });
+
+        res.json({ message: 'Đã bỏ ghét!', dislikes: app.dislikes });
+    } catch (error) {
+        console.error("Internal Error in undislikeApp:", error);
+        res.status(500).json({ message: 'Lỗi server.' });
+    }
+};
+
 module.exports = {
     createApp,
     getUserApps,
@@ -227,6 +291,8 @@ module.exports = {
     getAppStats,
     likeApp,
     dislikeApp,
+    unlikeApp,
+    undislikeApp,
     downloadApp,
     incrementAppViews
 };

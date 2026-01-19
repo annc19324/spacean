@@ -11,6 +11,7 @@ const UserProfile = () => {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [userInteractions, setUserInteractions] = useState({});
     const { token } = useAuth();
 
     useEffect(() => {
@@ -18,6 +19,21 @@ const UserProfile = () => {
             try {
                 const res = await axios.get(`http://localhost:5000/api/users/${username}`);
                 setUserData(res.data);
+
+                // Load user interactions if logged in
+                if (token && res.data.apps) {
+                    const interactions = {};
+                    for (const app of res.data.apps) {
+                        try {
+                            const interactionRes = await axios.get(`http://localhost:5000/api/apps/stats/${app.id}`);
+                            // We'll need to add interaction info to the response. For now, store empty
+                            interactions[app.id] = null;
+                        } catch (e) {
+                            interactions[app.id] = null;
+                        }
+                    }
+                    setUserInteractions(interactions);
+                }
 
                 // Increment view only once per session per user profile
                 const viewedKey = `viewed_${username}`;
@@ -32,10 +48,10 @@ const UserProfile = () => {
             }
         };
         fetchProfile();
-    }, [username]);
+    }, [username, token]);
 
     const handleInteraction = async (appId, type) => {
-        if (['like', 'dislike'].includes(type) && !token) {
+        if (['like', 'dislike', 'unlike', 'undislike'].includes(type) && !token) {
             toast.error("Bạn cần đăng nhập để thực hiện hành động này.");
             return;
         }
@@ -46,8 +62,24 @@ const UserProfile = () => {
             // Re-fetch profile to get updated stats
             const res = await axios.get(`http://localhost:5000/api/users/${username}`);
             setUserData(res.data);
-            if (type === 'like') toast.success("Đã thích ứng dụng!");
-            if (type === 'dislike') toast.success("Đã không thích ứng dụng.");
+
+            // Update local interaction state
+            if (type === 'like') {
+                setUserInteractions({ ...userInteractions, [appId]: 'LIKE' });
+                toast.success("Đã thích ứng dụng!");
+            }
+            if (type === 'dislike') {
+                setUserInteractions({ ...userInteractions, [appId]: 'DISLIKE' });
+                toast.success("Đã không thích ứng dụng.");
+            }
+            if (type === 'unlike') {
+                setUserInteractions({ ...userInteractions, [appId]: null });
+                toast.success("Đã bỏ thích!");
+            }
+            if (type === 'undislike') {
+                setUserInteractions({ ...userInteractions, [appId]: null });
+                toast.success("Đã bỏ ghét!");
+            }
         } catch (err) {
             if (type !== 'view') {
                 toast.error(err.response?.data?.message || "Lỗi tương tác");
@@ -142,16 +174,42 @@ const UserProfile = () => {
 
                         <div style={{ display: 'flex', gap: '10px' }}>
                             <button
-                                onClick={() => handleInteraction(app.id, 'like')}
-                                style={{ flex: 1, background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e', border: '1px solid rgba(34, 197, 94, 0.2)', padding: '10px', borderRadius: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}
+                                onClick={() => handleInteraction(app.id, userInteractions[app.id] === 'LIKE' ? 'unlike' : 'like')}
+                                style={{
+                                    flex: 1,
+                                    background: userInteractions[app.id] === 'LIKE' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(34, 197, 94, 0.1)',
+                                    color: '#22c55e',
+                                    border: userInteractions[app.id] === 'LIKE' ? '2px solid #22c55e' : '1px solid rgba(34, 197, 94, 0.2)',
+                                    padding: '10px',
+                                    borderRadius: '10px',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '5px',
+                                    fontWeight: userInteractions[app.id] === 'LIKE' ? '700' : '400'
+                                }}
                             >
-                                <ThumbsUp size={16} /> Thích
+                                <ThumbsUp size={16} /> {userInteractions[app.id] === 'LIKE' ? 'Đã thích' : 'Thích'}
                             </button>
                             <button
-                                onClick={() => handleInteraction(app.id, 'dislike')}
-                                style={{ flex: 1, background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '10px', borderRadius: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}
+                                onClick={() => handleInteraction(app.id, userInteractions[app.id] === 'DISLIKE' ? 'undislike' : 'dislike')}
+                                style={{
+                                    flex: 1,
+                                    background: userInteractions[app.id] === 'DISLIKE' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(239, 68, 68, 0.1)',
+                                    color: '#ef4444',
+                                    border: userInteractions[app.id] === 'DISLIKE' ? '2px solid #ef4444' : '1px solid rgba(239, 68, 68, 0.2)',
+                                    padding: '10px',
+                                    borderRadius: '10px',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '5px',
+                                    fontWeight: userInteractions[app.id] === 'DISLIKE' ? '700' : '400'
+                                }}
                             >
-                                <ThumbsDown size={16} /> Ghét
+                                <ThumbsDown size={16} /> {userInteractions[app.id] === 'DISLIKE' ? 'Đã ghét' : 'Ghét'}
                             </button>
                         </div>
 

@@ -11,6 +11,8 @@ router.delete('/:id', verifyToken, appController.deleteApp);
 router.get('/stats/:id', appController.getAppStats); // Specific app stats
 router.post('/like/:id', verifyToken, appController.likeApp);
 router.post('/dislike/:id', verifyToken, appController.dislikeApp);
+router.post('/unlike/:id', verifyToken, appController.unlikeApp);
+router.post('/undislike/:id', verifyToken, appController.undislikeApp);
 router.post('/download/:id', appController.downloadApp);
 router.post('/view/:id', appController.incrementAppViews);
 
