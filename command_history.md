@@ -170,5 +170,22 @@ git commit -m "Optimize View tracking, Integrate Cloudinary, and Prepare for Pro
 git push
 ```
 
+## 20. Khắc phục sự cố Deployment & Setup Production DB
+- **Fix Build Vercel**: Thêm `CI=false` vào lệnh build để bỏ qua warning (Treating warnings as errors causes build failure).
+- **Cleanup Code**: Loại bỏ các import thừa (Unused imports) trong `Dashboard.js` và `ManageUsers.js` để code sạch hơn.
+- **Fix API URL**: Sửa logic `getApiUrl` để loại bỏ dấu slash kép (`//`) gây lỗi 404 khi gọi API trên production.
+- **Setup Neon DB**:
+  - Kết nối Server với Neon PostgreSQL (cloud).
+  - Push schema lên Neon (`npx prisma db push`).
+  - Chạy seed data để tạo tài khoản Admin trên Neon (`node prisma/seed-admin.js`).
+- **Hoàn tất Deployment**: Frontend (Vercel) và Backend (Render) đã kết nối thành công với Database thật.
+
+## 21. Quản lý Phiên bản (Git) - Lần 6 (Final Polish)
+```powershell
+git add .
+git commit -m "Finalize deployment: Fix build errors, cleanup code, and sync production DB"
+git push
+```
+
 ---
 *Ghi chú: Nhật ký này sẽ được cập nhật khi có các lệnh quan trọng tiếp theo.*
