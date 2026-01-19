@@ -15,11 +15,14 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: async (req, file) => {
         const isImage = file.mimetype.startsWith('image/');
+        // For non-image files (like APK), use 'raw' resource_type and preserve extension
         return {
             folder: 'spacean',
-            resource_type: isImage ? 'image' : 'raw', // APK, PDF, ZIP etc. need 'raw'
-            allowed_formats: isImage ? ['jpg', 'png', 'jpeg', 'gif', 'webp'] : undefined,
-            public_id: `${Date.now()}-${file.originalname.replace(/\.[^/.]+$/, '')}` // Remove extension
+            resource_type: isImage ? 'image' : 'raw',
+            public_id: `${Date.now()}-${file.originalname}`, // Keep original name/ext for raw files to ensure download works
+            format: isImage ? 'png' : undefined, // Let images convert to png (optional), raw files keep original format
+            use_filename: true,
+            unique_filename: false,
         };
     }
 });
