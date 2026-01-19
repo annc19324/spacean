@@ -83,7 +83,8 @@ const Dashboard = () => {
             setFormData({ ...formData, [field]: res.data.url });
             toast.success("Tải file lên thành công!");
         } catch (err) {
-            toast.error("Lỗi khi tải file lên");
+            console.error("Upload error:", err);
+            toast.error(err.response?.data?.message || err.message || "Lỗi khi tải file lên");
         }
     };
 
