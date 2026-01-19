@@ -3,6 +3,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Edit3, Ban, Trash2, Search, ChevronLeft, ChevronRight, Eye, ThumbsUp, Download, Lock } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { getApiUrl } from '../../../config/api';
 
 const ManageUsers = ({ token }) => {
     const [users, setUsers] = useState([]);
@@ -19,7 +20,7 @@ const ManageUsers = ({ token }) => {
         setLoading(true);
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const res = await axios.get(`http://localhost:5000/api/admin/users?search=${search}&page=${page}`, config);
+            const res = await axios.get(getApiUrl(`/api/admin/users?search=${search}&page=${page}`), config);
             setUsers(res.data.users);
             setTotalPages(res.data.pages);
         } catch (err) {
@@ -37,7 +38,7 @@ const ManageUsers = ({ token }) => {
         e.preventDefault();
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.put(`http://localhost:5000/api/admin/users/${editingUser.id}`, editingUser, config);
+            await axios.put(getApiUrl(`/api/admin/users/${editingUser.id}`), editingUser, config);
             toast.success("Cập nhật thành công!");
             setShowEditModal(false);
             fetchUsers();
@@ -50,7 +51,7 @@ const ManageUsers = ({ token }) => {
         const newStatus = u.status === 'BANNED' ? 'ACTIVE' : 'BANNED';
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.put(`http://localhost:5000/api/admin/users/${u.id}`, { status: newStatus }, config);
+            await axios.put(getApiUrl(`/api/admin/users/${u.id}`), { status: newStatus }, config);
             toast.success(`Đã ${newStatus === 'BANNED' ? 'cấm' : 'mở cấm'}!`);
             fetchUsers();
         } catch (err) {
@@ -62,7 +63,7 @@ const ManageUsers = ({ token }) => {
         if (!window.confirm("XÓA HOÀN TOÀN người dùng này?")) return;
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.delete(`http://localhost:5000/api/admin/users/${userId}`, config);
+            await axios.delete(getApiUrl(`/api/admin/users/${userId}`), config);
             toast.success("Đã xóa!");
             fetchUsers();
         } catch (err) {

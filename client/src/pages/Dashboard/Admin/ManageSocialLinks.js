@@ -3,6 +3,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Plus, Edit3, Trash2, Upload, Facebook, Instagram, Twitter, Youtube, Linkedin, Github, Globe, Music } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getApiUrl } from '../../../config/api';
 
 const PREDEFINED_ICONS = [
     { type: 'facebook', name: 'Facebook', Icon: Facebook, color: '#1877F2' },
@@ -31,7 +32,7 @@ const ManageSocialLinks = ({ token }) => {
 
     const fetchLinks = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/social-links');
+            const res = await axios.get(getApiUrl('/api/social-links'));
             setLinks(res.data);
         } catch (err) {
             toast.error('Lỗi khi tải danh sách liên kết');
@@ -70,7 +71,7 @@ const ManageSocialLinks = ({ token }) => {
         formDataFile.append('file', file);
         try {
             const config = { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } };
-            const res = await axios.post('http://localhost:5000/api/upload', formDataFile, config);
+            const res = await axios.post(getApiUrl('/api/upload'), formDataFile, config);
             setFormData({ ...formData, iconUrl: res.data.url, iconType: 'custom' });
             toast.success('Đã tải icon lên!');
         } catch (err) {
@@ -83,10 +84,10 @@ const ManageSocialLinks = ({ token }) => {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
             if (isEditing) {
-                await axios.put(`http://localhost:5000/api/social-links/${currentId}`, formData, config);
+                await axios.put(getApiUrl(`/api/social-links/${currentId}`), formData, config);
                 toast.success('Đã cập nhật liên kết!');
             } else {
-                await axios.post('http://localhost:5000/api/social-links', formData, config);
+                await axios.post(getApiUrl('/api/social-links'), formData, config);
                 toast.success('Đã thêm liên kết!');
             }
             setShowModal(false);
@@ -100,7 +101,7 @@ const ManageSocialLinks = ({ token }) => {
         if (!window.confirm('Bạn có chắc muốn xóa liên kết này?')) return;
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.delete(`http://localhost:5000/api/social-links/${id}`, config);
+            await axios.delete(getApiUrl(`/api/social-links/${id}`), config);
             toast.success('Đã xóa liên kết!');
             fetchLinks();
         } catch (err) {

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { CheckCircle, XCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { getApiUrl } from '../../../config/api';
 
 const PendingUsers = ({ token }) => {
     const [pendingUsers, setPendingUsers] = useState([]);
@@ -12,7 +13,7 @@ const PendingUsers = ({ token }) => {
         setLoading(true);
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const res = await axios.get('http://localhost:5000/api/admin/pending-users', config);
+            const res = await axios.get(getApiUrl('/api/admin/pending-users'), config);
             setPendingUsers(res.data);
         } catch (err) {
             toast.error("Lỗi tải danh sách chờ");
@@ -28,7 +29,7 @@ const PendingUsers = ({ token }) => {
     const handleApprove = async (userId) => {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.put(`http://localhost:5000/api/admin/approve/${userId}`, {}, config);
+            await axios.put(getApiUrl(`/api/admin/approve/${userId}`), {}, config);
             toast.success("Đã phê duyệt!");
             fetchPending();
         } catch (err) {

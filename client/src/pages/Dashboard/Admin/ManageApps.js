@@ -3,6 +3,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Edit3, Trash2, Search, ChevronLeft, ChevronRight, Eye, ThumbsUp, ThumbsDown, Download } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { getApiUrl } from '../../../config/api';
 
 const ManageApps = ({ token }) => {
     const [apps, setApps] = useState([]);
@@ -19,7 +20,7 @@ const ManageApps = ({ token }) => {
         setLoading(true);
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const res = await axios.get(`http://localhost:5000/api/admin/apps?search=${search}&page=${page}`, config);
+            const res = await axios.get(getApiUrl(`/api/admin/apps?search=${search}&page=${page}`), config);
             setApps(res.data.apps);
             setTotalPages(res.data.pages);
         } catch (err) {
@@ -37,7 +38,7 @@ const ManageApps = ({ token }) => {
         e.preventDefault();
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.put(`http://localhost:5000/api/admin/apps/${editingApp.id}`, editingApp, config);
+            await axios.put(getApiUrl(`/api/admin/apps/${editingApp.id}`), editingApp, config);
             toast.success("Cập nhật thành công!");
             setShowEditModal(false);
             fetchApps();
@@ -50,7 +51,7 @@ const ManageApps = ({ token }) => {
         if (!window.confirm("Xóa ứng dụng này khỏi hệ thống?")) return;
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.delete(`http://localhost:5000/api/admin/apps/${appId}`, config);
+            await axios.delete(getApiUrl(`/api/admin/apps/${appId}`), config);
             toast.success("Đã xóa!");
             fetchApps();
         } catch (err) {
