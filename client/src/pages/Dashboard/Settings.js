@@ -104,6 +104,9 @@ const Settings = ({ profileData, setProfileData, handleProfileUpdate, passwordDa
                                     {showNewPwd ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
                             </div>
+                            <small style={{ display: 'block', marginTop: '5px', fontSize: '0.75rem', color: '#64748b' }}>
+                                Ít nhất 8 ký tự (chữ hoa, chữ thường, số, ký tự đặc biệt @$!%*?&)
+                            </small>
                         </div>
                         <div style={{ marginBottom: '15px' }}>
                             <label>Xác nhận mật khẩu mới</label>

@@ -127,6 +127,13 @@ const Dashboard = () => {
 
     const handleChangePassword = async (e) => {
         e.preventDefault();
+
+        // Validate password format
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(passwordData.newPassword)) {
+            return toast.error('Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt (@$!%*?&).');
+        }
+
         if (passwordData.newPassword !== passwordData.confirmPassword) {
             return toast.error("Mật khẩu mới không khớp!");
         }

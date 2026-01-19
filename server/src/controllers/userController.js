@@ -90,6 +90,14 @@ const changePassword = async (req, res) => {
         const userId = req.user.id;
         const { oldPassword, newPassword } = req.body;
 
+        // Validate new password format
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(newPassword)) {
+            return res.status(400).json({
+                message: 'Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt (@$!%*?&).'
+            });
+        }
+
         const user = await prisma.user.findUnique({ where: { id: userId } });
         const isMatch = await bcrypt.compare(oldPassword, user.password);
 
