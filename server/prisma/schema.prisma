@@ -16,6 +16,7 @@ model User {
   password      String
   role          String    @default("USER") // ADMIN, USER, GUEST
   isApproved    Boolean   @default(false)
+  status        String    @default("ACTIVE") // ACTIVE, BANNED
   avatar        String?
   bio           String?
   joinDate      DateTime  @default(now())

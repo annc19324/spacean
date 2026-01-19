@@ -1,35 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const { PrismaClient } = require('@prisma/client');
+const adminController = require('../controllers/adminController');
 const { verifyToken, isAdmin } = require('../middlewares/authMiddleware');
 
-const prisma = new PrismaClient();
+// Approval flow
+router.get('/pending-users', verifyToken, isAdmin, adminController.getPendingUsers);
+router.put('/approve/:id', verifyToken, isAdmin, adminController.approveUser);
 
-// Get list of pending users
-router.get('/pending-users', verifyToken, isAdmin, async (req, res) => {
-    try {
-        const users = await prisma.user.findMany({
-            where: { isApproved: false, role: 'USER' },
-            select: { id: true, username: true, joinDate: true }
-        });
-        res.json(users);
-    } catch (error) {
-        res.status(500).json({ message: 'Lỗi khi lấy danh sách chờ.' });
-    }
-});
+// User Management (Supreme Power)
+router.get('/users', verifyToken, isAdmin, adminController.getAllUsersAdmin);
+router.put('/users/:id', verifyToken, isAdmin, adminController.updateUserAdmin);
+router.delete('/users/:id', verifyToken, isAdmin, adminController.deleteUserAdmin);
 
-// Approve a user
-router.put('/approve/:id', verifyToken, isAdmin, async (req, res) => {
-    try {
-        const { id } = req.params;
-        await prisma.user.update({
-            where: { id },
-            data: { isApproved: true }
-        });
-        res.json({ message: 'Đã phê duyệt người dùng.' });
-    } catch (error) {
-        res.status(500).json({ message: 'Lỗi khi phê duyệt.' });
-    }
-});
+// App Management (Supreme Power)
+router.get('/apps', verifyToken, isAdmin, adminController.getAllAppsAdmin);
+router.delete('/apps/:id', verifyToken, isAdmin, adminController.deleteAppAdmin);
 
 module.exports = router;

@@ -80,6 +80,13 @@ const login = async (req, res) => {
             });
         }
 
+        // Check if banned
+        if (user.status === 'BANNED') {
+            return res.status(403).json({
+                message: 'Tài khoản của bạn đã bị cấm khỏi hệ thống.'
+            });
+        }
+
         // Generate JWT
         const token = jwt.sign(
             { id: user.id, username: user.username, role: user.role },
@@ -93,7 +100,9 @@ const login = async (req, res) => {
                 id: user.id,
                 username: user.username,
                 role: user.role,
-                isApproved: user.isApproved
+                isApproved: user.isApproved,
+                bio: user.bio,
+                avatar: user.avatar
             }
         });
     } catch (error) {
