@@ -21,12 +21,8 @@ const AppDetails = () => {
                 const res = await axios.get(`http://localhost:5000/api/apps/stats/${id}`);
                 setAppData(res.data);
 
-                // Increment view only once per session per app
-                const viewedKey = `viewed_app_${id}`;
-                if (!sessionStorage.getItem(viewedKey)) {
-                    await axios.post(`http://localhost:5000/api/apps/view/${id}`);
-                    sessionStorage.setItem(viewedKey, 'true');
-                }
+                // Increment view every time
+                await axios.post(`http://localhost:5000/api/apps/view/${id}`);
 
                 // Load user interaction if logged in
                 if (token) {

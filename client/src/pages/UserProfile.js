@@ -33,11 +33,9 @@ const UserProfile = () => {
                     }
                 }
 
-                // Increment view only once per session per user profile
-                const viewedKey = `viewed_${username}`;
-                if (res.data.id && !sessionStorage.getItem(viewedKey)) {
+                // Increment view every time
+                if (res.data.id) {
                     await axios.post(`http://localhost:5000/api/users/view/${res.data.id}`);
-                    sessionStorage.setItem(viewedKey, 'true');
                 }
             } catch (err) {
                 setError('Không tìm thấy người dùng hoặc có lỗi xảy ra.');
