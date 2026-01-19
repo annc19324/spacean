@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Users, LayoutGrid, Clock } from 'lucide-react';
+import { Users, LayoutGrid, Clock, Link as LinkIcon } from 'lucide-react';
 import PendingUsers from './PendingUsers';
 import ManageUsers from './ManageUsers';
 import ManageApps from './ManageApps';
+import ManageSocialLinks from './ManageSocialLinks';
 
 const AdminLayout = ({ token }) => {
     const [subTab, setSubTab] = useState('pending');
@@ -12,6 +13,7 @@ const AdminLayout = ({ token }) => {
         { id: 'pending', name: 'Chờ phê duyệt', icon: Clock, color: '#22c55e' },
         { id: 'users', name: 'Người dùng', icon: Users, color: '#3b82f6' },
         { id: 'apps', name: 'Kho ứng dụng', icon: LayoutGrid, color: '#a855f7' },
+        { id: 'social', name: 'Footer & Liên hệ', icon: LinkIcon, color: '#f59e0b' },
     ];
 
     return (
@@ -48,6 +50,7 @@ const AdminLayout = ({ token }) => {
                     {subTab === 'pending' && <PendingUsers token={token} />}
                     {subTab === 'users' && <ManageUsers token={token} />}
                     {subTab === 'apps' && <ManageApps token={token} />}
+                    {subTab === 'social' && <ManageSocialLinks token={token} />}
                 </motion.div>
             </AnimatePresence>
         </motion.div>

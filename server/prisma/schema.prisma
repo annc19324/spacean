@@ -67,3 +67,15 @@ model Interaction {
 
   @@unique([userId, appId])
 }
+
+model SocialLink {
+  id        String   @id @default(uuid())
+  name      String   // E.g., "Facebook", "Instagram", "Custom"
+  iconType  String   // Predefined: "facebook", "instagram", etc. or "custom"
+  iconUrl   String?  // For custom icons
+  url       String   // The actual link
+  order     Int      @default(0) // Display order
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
