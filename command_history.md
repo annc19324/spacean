@@ -131,5 +131,20 @@ git commit -m "Enhance security, file uploads, social limits, and responsive UI 
 git push
 ```
 
+## 14. Cài đặt Người dùng & Quyền Admin Tối cao
+- **User Settings**: Triển khai tính năng đổi tên đăng nhập (Username), cập nhật tiểu sử (Bio) và đổi mật khẩu an toàn (Bcrypt).
+- **Admin Supreme Power**:
+  - Quản lý toàn bộ người dùng: Xem danh sách, chỉnh sửa thông tin, phê duyệt hoặc xóa vĩnh viễn.
+  - Cơ chế Banning: Cho phép Admin cấm (Ban) người dùng; hệ thống sẽ tự động vô hiệu hóa quyền truy cập ngay lập tức thông qua Middleware check.
+  - Quản lý nội dung: Admin có quyền xóa bất kỳ App/Web nào trên toàn hệ thống.
+- **Improved Dashboard UI**: Tái cấu trúc Dashboard với hệ thống thanh điều hướng (Sidebar) giúp phân tách rõ rệt không gian ứng dụng, cài đặt cá nhân và bảng điều khiển quản trị.
+
+## 15. Quản lý Phiên bản (Git) - Lần 4
+```powershell
+git add .
+git commit -m "Implement User settings (Profile/Password) and Supreme Admin powers (User/App management)"
+git push
+```
+
 ---
 *Ghi chú: Nhật ký này sẽ được cập nhật khi có các lệnh quan trọng tiếp theo.*
