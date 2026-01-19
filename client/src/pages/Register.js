@@ -88,6 +88,7 @@ const Register = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
+                                    tabIndex="-1"
                                     style={{ position: 'absolute', right: '12px', top: '12px', background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', padding: 0 }}
                                 >
                                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}

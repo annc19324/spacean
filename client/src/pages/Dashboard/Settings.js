@@ -91,7 +91,7 @@ const Settings = ({ profileData, setProfileData, handleProfileUpdate, passwordDa
                             <label>Mật khẩu cũ</label>
                             <div style={{ position: 'relative' }}>
                                 <input type={showOldPwd ? "text" : "password"} value={passwordData.oldPassword} onChange={e => setPasswordData({ ...passwordData, oldPassword: e.target.value })} required style={{ paddingRight: '45px' }} />
-                                <button type="button" onClick={() => setShowOldPwd(!showOldPwd)} className="btn-icon" style={{ position: 'absolute', right: '5px', top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'transparent' }}>
+                                <button type="button" onClick={() => setShowOldPwd(!showOldPwd)} tabIndex="-1" className="btn-icon" style={{ position: 'absolute', right: '5px', top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'transparent' }}>
                                     {showOldPwd ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
                             </div>
@@ -100,7 +100,7 @@ const Settings = ({ profileData, setProfileData, handleProfileUpdate, passwordDa
                             <label>Mật khẩu mới</label>
                             <div style={{ position: 'relative' }}>
                                 <input type={showNewPwd ? "text" : "password"} value={passwordData.newPassword} onChange={e => setPasswordData({ ...passwordData, newPassword: e.target.value })} required style={{ paddingRight: '45px' }} />
-                                <button type="button" onClick={() => setShowNewPwd(!showNewPwd)} className="btn-icon" style={{ position: 'absolute', right: '5px', top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'transparent' }}>
+                                <button type="button" onClick={() => setShowNewPwd(!showNewPwd)} tabIndex="-1" className="btn-icon" style={{ position: 'absolute', right: '5px', top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'transparent' }}>
                                     {showNewPwd ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
                             </div>
