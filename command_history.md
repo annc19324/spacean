@@ -93,5 +93,13 @@ git commit -m "Implement Backend logic (Auth, Apps, Admin Approval) and update h
 git push
 ```
 
+## 8. Triển khai Hệ thống Hồ sơ Công khai & Tương tác
+- Tạo `userController.js` và route `/api/users` để khách có thể xem danh sách User và hồ sơ cá nhân.
+- Cập nhật `appController.js` thêm các logic: `likeApp`, `dislikeApp`, `downloadApp`.
+- Thiết lập cơ chế tracking views: Tăng view cho cả ứng dụng và chủ sở hữu khi hồ sơ hoặc app được truy cập.
+- Xây dựng trang `UserProfile.js` (React) hiển thị không gian riêng của từng User với đầy đủ các chỉ số thống kê.
+- Cập nhật `Home.js` chuyển trọng tâm sang khám phá "Không gian" (Spaces) của các User.
+- Bổ sung các nút tương tác (Thích, Ghét, Tải về) với hiệu ứng cập nhật dữ liệu thời gian thực.
+
 ---
 *Ghi chú: Nhật ký này sẽ được cập nhật khi có các lệnh quan trọng tiếp theo.*

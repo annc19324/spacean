@@ -28,6 +28,9 @@ const Navbar = () => {
             <div style={{ display: 'flex', gap: '25px', alignItems: 'center' }}>
                 {user ? (
                     <>
+                        <Link to={`/user/${user.username}`} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <Rocket size={18} /> My Space
+                        </Link>
                         <Link to="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                             <LayoutDashboard size={18} /> Dashboard
                         </Link>

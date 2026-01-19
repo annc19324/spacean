@@ -95,20 +95,83 @@ const getAppStats = async (req, res) => {
         const { id } = req.params;
         const app = await prisma.app.findUnique({
             where: { id },
-            include: { user: { select: { username: true } } }
         });
 
         if (!app) return res.status(404).json({ message: 'Ứng dụng không tìm thấy.' });
 
-        // Increment views automatically when stats are requested (simple tracking)
+        // Increment views for both app and the user who owns it
         await prisma.app.update({
             where: { id },
-            data: { views: { increment: 1 } }
+            data: {
+                views: { increment: 1 },
+                user: {
+                    update: { views: { increment: 1 } }
+                }
+            }
         });
 
-        res.json(app);
+        const updatedApp = await prisma.app.findUnique({
+            where: { id },
+            include: { user: { select: { username: true, joinDate: true, views: true, likes: true, dislikes: true, downloads: true } } }
+        });
+
+        res.json(updatedApp);
     } catch (error) {
         res.status(500).json({ message: 'Lỗi khi lấy thông số ứng dụng.' });
+    }
+};
+
+const likeApp = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const app = await prisma.app.update({
+            where: { id },
+            data: {
+                likes: { increment: 1 },
+                user: {
+                    update: { likes: { increment: 1 } }
+                }
+            }
+        });
+        res.json({ message: 'Đã thích ứng dụng!', likes: app.likes });
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi khi thích ứng dụng.' });
+    }
+};
+
+const dislikeApp = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const app = await prisma.app.update({
+            where: { id },
+            data: {
+                dislikes: { increment: 1 },
+                user: {
+                    update: { dislikes: { increment: 1 } }
+                }
+            }
+        });
+        res.json({ message: 'Đã không thích ứng dụng.', dislikes: app.dislikes });
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi khi không thích ứng dụng.' });
+    }
+};
+
+const downloadApp = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const app = await prisma.app.update({
+            where: { id },
+            data: {
+                downloads: { increment: 1 },
+                user: {
+                    update: { downloads: { increment: 1 } }
+                }
+            }
+        });
+        res.json({ message: 'Đang bắt đầu tải xuống...', downloads: app.downloads });
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi khi tải ứng dụng.' });
     }
 };
 
@@ -118,5 +181,8 @@ module.exports = {
     getPublicApps,
     updateApp,
     deleteApp,
-    getAppStats
+    getAppStats,
+    likeApp,
+    dislikeApp,
+    downloadApp
 };

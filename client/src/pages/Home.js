@@ -4,21 +4,21 @@ import { motion } from 'framer-motion';
 import { Eye, Heart, Download, ExternalLink, Calendar } from 'lucide-react';
 
 const Home = () => {
-    const [apps, setApps] = useState([]);
+    const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchApps = async () => {
+        const fetchUsers = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/apps/public');
-                setApps(res.data);
+                const res = await axios.get('http://localhost:5000/api/users');
+                setUsers(res.data);
             } catch (err) {
-                console.error("Lỗi lấy dữ liệu app");
+                console.error("Lỗi lấy dữ liệu người dùng");
             } finally {
                 setLoading(false);
             }
         };
-        fetchApps();
+        fetchUsers();
     }, []);
 
     return (
@@ -31,7 +31,7 @@ const Home = () => {
                 >
                     Khám Phá <span style={{ background: 'var(--accent-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Không Gian Của An</span>
                 </motion.h1>
-                <p style={{ color: '#94a3b8', fontSize: '1.2rem' }}>Nơi lưu trữ và chia sẻ những ứng dụng tuyệt vời nhất.</p>
+                <p style={{ color: '#94a3b8', fontSize: '1.2rem' }}>Duyệt qua các không gian cá nhân và khám phá những ứng dụng độc đáo.</p>
             </header>
 
             {loading ? (
@@ -39,64 +39,44 @@ const Home = () => {
             ) : (
                 <div style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
                     gap: '30px'
                 }}>
-                    {apps.map((app, index) => (
+                    {users.map((user, index) => (
                         <motion.div
-                            key={app.id}
+                            key={user.id}
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: index * 0.1 }}
+                            whileHover={{ y: -10 }}
                             className="glass-card"
-                            style={{ padding: '20px', overflow: 'hidden' }}
+                            style={{ padding: '30px', textAlign: 'center', cursor: 'pointer' }}
                         >
-                            <div style={{
-                                height: '180px',
-                                background: '#1e293b',
-                                borderRadius: '12px',
-                                marginBottom: '15px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                backgroundImage: app.imageUrl ? `url(${app.imageUrl})` : 'none',
-                                backgroundSize: 'cover'
-                            }}>
-                                {!app.imageUrl && <span style={{ color: '#475569' }}>Chưa có ảnh mô tả</span>}
-                            </div>
-
-                            <h3 style={{ fontSize: '1.4rem', marginBottom: '8px' }}>{app.name}</h3>
-                            <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '15px', height: '40px', overflow: 'hidden' }}>
-                                {app.description || "Không có mô tả cho ứng dụng này."}
-                            </p>
-
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#64748b', fontSize: '0.85rem' }}>
-                                <div style={{ display: 'flex', gap: '15px' }}>
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Eye size={14} /> {app.views}</span>
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Heart size={14} /> {app.likes}</span>
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Download size={14} /> {app.downloads}</span>
+                            <Link to={`/user/${user.username}`}>
+                                <div style={{
+                                    width: '80px',
+                                    height: '80px',
+                                    borderRadius: '50%',
+                                    background: 'var(--accent-gradient)',
+                                    margin: '0 auto 20px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}>
+                                    {user.avatar ? <img src={user.avatar} alt={user.username} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} /> : <span style={{ fontSize: '2rem', fontWeight: 800, color: 'white' }}>{user.username[0].toUpperCase()}</span>}
                                 </div>
-                            </div>
-
-                            <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
-                                {app.link && (
-                                    <a href={app.link} target="_blank" rel="noreferrer" className="btn-primary" style={{ flex: 1, textAlign: 'center', padding: '10px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
-                                        <ExternalLink size={16} /> Truy cập
-                                    </a>
-                                )}
-                                {app.downloadUrl && (
-                                    <a href={app.downloadUrl} className="btn-primary" style={{ flex: 1, textAlign: 'center', padding: '10px', fontSize: '0.9rem', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
-                                        <Download size={16} /> Tải về
-                                    </a>
-                                )}
-                            </div>
-
-                            <div style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid var(--glass-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', color: '#94a3b8' }}>
-                                <span>Bởi: <strong>{app.user.username}</strong></span>
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                    <Calendar size={12} /> {new Date(app.createdAt).toLocaleDateString('vi-VN')}
-                                </span>
-                            </div>
+                                <h3 style={{ fontSize: '1.5rem', marginBottom: '10px' }}>{user.username}</h3>
+                                <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', color: '#64748b', fontSize: '0.85rem', marginBottom: '20px' }}>
+                                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Eye size={14} /> {user.views}</span>
+                                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Heart size={14} /> {user.likes}</span>
+                                </div>
+                                <div style={{ fontSize: '0.9rem', color: '#94a3b8' }}>
+                                    {user._count.apps} Ứng dụng / Website
+                                </div>
+                                <div className="btn-primary" style={{ marginTop: '20px', width: '100%', display: 'inline-block' }}>
+                                    Ghé thăm Space
+                                </div>
+                            </Link>
                         </motion.div>
                     ))}
                 </div>

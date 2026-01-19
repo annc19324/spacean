@@ -9,5 +9,8 @@ router.post('/', verifyToken, appController.createApp);
 router.put('/:id', verifyToken, appController.updateApp);
 router.delete('/:id', verifyToken, appController.deleteApp);
 router.get('/stats/:id', appController.getAppStats); // Specific app stats
+router.post('/like/:id', appController.likeApp);
+router.post('/dislike/:id', appController.dislikeApp);
+router.post('/download/:id', appController.downloadApp);
 
 module.exports = router;
