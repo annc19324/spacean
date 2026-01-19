@@ -140,22 +140,29 @@ const UserProfile = () => {
                         className="glass-card"
                         style={{ padding: '20px', display: 'flex', flexDirection: 'column' }}
                     >
-                        <div style={{
-                            height: '180px',
-                            background: '#1e293b',
-                            borderRadius: '12px',
-                            marginBottom: '15px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            backgroundImage: app.imageUrl ? `url(${app.imageUrl})` : 'none',
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center'
-                        }}>
-                            {!app.imageUrl && <span style={{ color: '#475569' }}>Chưa có ảnh mô tả</span>}
-                        </div>
+                        <Link to={`/app/${app.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <div style={{
+                                height: '180px',
+                                background: '#1e293b',
+                                borderRadius: '12px',
+                                marginBottom: '15px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundImage: app.imageUrl ? `url(${app.imageUrl})` : 'none',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                cursor: 'pointer',
+                                transition: 'transform 0.2s'
+                            }}
+                                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                            >
+                                {!app.imageUrl && <span style={{ color: '#475569' }}>Chưa có ảnh mô tả</span>}
+                            </div>
 
-                        <h3 style={{ fontSize: '1.4rem', marginBottom: '8px' }}>{app.name}</h3>
+                            <h3 style={{ fontSize: '1.4rem', marginBottom: '8px', cursor: 'pointer' }}>{app.name}</h3>
+                        </Link>
                         <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '15px', flex: 1 }}>
                             {app.description || "Không có mô tả cho ứng dụng này."}
                         </p>
