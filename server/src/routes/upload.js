@@ -33,12 +33,25 @@ const upload = multer({
     limits: { fileSize: 100 * 1024 * 1024 } // 100MB limit
 });
 
-router.post('/', verifyToken, upload.single('file'), (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({ message: 'Không có file nào được tải lên.' });
-    }
-    // Cloudinary returns the URL in req.file.path or req.file.secure_url
-    res.json({ url: req.file.path || req.file.secure_url });
+router.post('/', verifyToken, (req, res) => {
+    upload.single('file')(req, res, (err) => {
+        if (err) {
+            console.error("Upload Error Details:", err);
+            // Check for specific Multer errors
+            if (err instanceof multer.MulterError) {
+                return res.status(400).json({ message: `Lỗi Multer: ${err.message}` });
+            }
+            // Check for Cloudinary errors (often wrapped in standard Error)
+            return res.status(500).json({ message: `Lỗi tải file lên Server: ${err.message}` });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({ message: 'Không có file nào được tải lên.' });
+        }
+
+        // Cloudinary returns the URL in req.file.path or req.file.secure_url
+        res.json({ url: req.file.path || req.file.secure_url });
+    });
 });
 
 module.exports = router;
