@@ -128,7 +128,9 @@ const Dashboard = () => {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
             const res = await axios.put(getApiUrl('/api/users/profile'), profileData, config);
-            login(res.data, token); // Update context
+            // res.data structure: { message, user }
+            // AuthContext expects (userData, token) where userData is the user object directly
+            login(res.data.user, token);
             toast.success("Đã cập nhật hồ sơ!");
         } catch (err) {
             toast.error(err.response?.data?.message || "Lỗi cập nhật");
