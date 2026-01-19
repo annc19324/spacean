@@ -117,8 +117,10 @@ const AppDetails = () => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             backgroundImage: appData.imageUrl ? `url(${appData.imageUrl})` : 'none',
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center'
+                            backgroundSize: 'contain',
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: 'center',
+                            overflow: 'hidden'
                         }}>
                             {!appData.imageUrl && <span style={{ color: '#475569', fontSize: '1.2rem' }}>Chưa có ảnh</span>}
                         </div>

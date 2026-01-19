@@ -150,10 +150,12 @@ const UserProfile = () => {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 backgroundImage: app.imageUrl ? `url(${app.imageUrl})` : 'none',
-                                backgroundSize: 'cover',
+                                backgroundSize: 'contain',
+                                backgroundRepeat: 'no-repeat',
                                 backgroundPosition: 'center',
                                 cursor: 'pointer',
-                                transition: 'transform 0.2s'
+                                transition: 'transform 0.2s',
+                                overflow: 'hidden'
                             }}
                                 onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
                                 onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
