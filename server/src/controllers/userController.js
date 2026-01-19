@@ -68,6 +68,13 @@ const updateProfile = async (req, res) => {
 
         // Optional: Check if username is taken if it's being changed
         if (username) {
+            const usernameRegex = /^[a-zA-Z0-9.]{6,}$/;
+            if (!usernameRegex.test(username)) {
+                return res.status(400).json({
+                    message: 'Username phải ít nhất 6 ký tự, chỉ bao gồm chữ cái, số và dấu chấm. Không được chứa khoảng trắng.'
+                });
+            }
+
             const existing = await prisma.user.findFirst({
                 where: { username, NOT: { id: userId } }
             });

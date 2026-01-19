@@ -21,7 +21,7 @@ const Register = () => {
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
         if (!usernameRegex.test(username)) {
-            toast.error('Username phải ít nhất 6 kì tự, bao gồm chữ thường, chữ hoa, số và dấu chấm.');
+            toast.error('Username phải ít nhất 6 ký tự, chỉ bao gồm chữ cái, số và dấu chấm. Không được chứa khoảng trắng.');
             return;
         }
 
@@ -71,7 +71,7 @@ const Register = () => {
                                 />
                             </div>
                             <small style={{ display: 'block', marginTop: '5px', fontSize: '0.75rem', color: '#64748b' }}>
-                                Ít nhất 6 kí tự (a-z, A-Z, 0-9, .)
+                                Ít nhất 6 kí tự (a-z, A-Z, 0-9, .), KHÔNG khoảng trắng
                             </small>
                         </div>
 

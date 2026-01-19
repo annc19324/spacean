@@ -14,7 +14,7 @@ const register = async (req, res) => {
 
         if (!usernameRegex.test(username)) {
             return res.status(400).json({
-                message: 'Username phải ít nhất 6 kí tự, bao gồm chữ thường, chữ hoa, số và dấu chấm.'
+                message: 'Username phải ít nhất 6 ký tự, chỉ bao gồm chữ cái, số và dấu chấm. Không được chứa khoảng trắng.'
             });
         }
 

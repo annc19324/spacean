@@ -126,6 +126,13 @@ const Dashboard = () => {
     // --- PROFILE ACTIONS ---
     const handleProfileUpdate = async (e) => {
         e.preventDefault();
+
+        const usernameRegex = /^[a-zA-Z0-9.]{6,}$/;
+        if (profileData.username && !usernameRegex.test(profileData.username)) {
+            toast.error('Username phải ít nhất 6 ký tự, chỉ gồm chữ cái, số và dấu chấm. KHÔNG khoảng trắng.');
+            return;
+        }
+
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
             const res = await axios.put(getApiUrl('/api/users/profile'), profileData, config);
