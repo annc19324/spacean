@@ -45,7 +45,7 @@ const Settings = ({ profileData, setProfileData, handleProfileUpdate, passwordDa
                         <div style={{ position: 'relative', width: '100px', height: '100px' }}>
                             <div style={{
                                 width: '100px', height: '100px', borderRadius: '50%',
-                                background: 'var(--accent-gradient)',
+                                background: '#1e293b',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 overflow: 'hidden', border: '3px solid var(--glass-border)'
                             }}>

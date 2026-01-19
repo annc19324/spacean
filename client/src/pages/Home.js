@@ -60,7 +60,7 @@ const Home = () => {
                                     width: '80px',
                                     height: '80px',
                                     borderRadius: '50%',
-                                    background: 'var(--accent-gradient)',
+                                    background: '#1e293b',
                                     margin: '0 auto 20px',
                                     display: 'flex',
                                     alignItems: 'center',

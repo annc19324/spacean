@@ -105,7 +105,7 @@ const UserProfile = () => {
                 className="glass-card"
                 style={{ padding: '40px', marginBottom: '40px', display: 'flex', alignItems: 'center', gap: '30px', flexWrap: 'wrap' }}
             >
-                <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'var(--accent-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: '#1e293b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     {userData.avatar ? <img src={userData.avatar} alt={userData.username} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} /> : <User size={60} color="white" />}
                 </div>
                 <div style={{ flex: '1 1 300px' }}>
