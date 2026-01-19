@@ -3,6 +3,8 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import ConfirmModal from '../components/ConfirmModal';
+import { useConfirm } from '../hooks/useConfirm';
 
 // Refactored Sub-components
 import Sidebar from './Dashboard/Sidebar';
@@ -15,6 +17,7 @@ const Dashboard = () => {
     const [apps, setApps] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('apps');
+    const { showConfirm, confirmAction, confirmConfig, confirm, close } = useConfirm();
 
     // Modal & Form state for Adding/Editing Apps (User personal apps)
     const [showModal, setShowModal] = useState(false);
@@ -100,16 +103,22 @@ const Dashboard = () => {
         }
     };
 
-    const handleAppDelete = async (id) => {
-        if (!window.confirm("Bạn có chắc chắn muốn xóa ứng dụng này?")) return;
-        try {
-            const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.delete(`http://localhost:5000/api/apps/${id}`, config);
-            toast.success("Đã xóa ứng dụng!");
-            fetchData();
-        } catch (err) {
-            toast.error("Lỗi khi xóa");
-        }
+    const handleAppDelete = (id) => {
+        confirm(async () => {
+            try {
+                const config = { headers: { Authorization: `Bearer ${token}` } };
+                await axios.delete(`http://localhost:5000/api/apps/${id}`, config);
+                toast.success("Đã xóa ứng dụng!");
+                fetchData();
+            } catch (err) {
+                toast.error("Lỗi khi xóa");
+            }
+        }, {
+            title: "Xác nhận xóa",
+            message: "Bạn có chắc chắn muốn xóa ứng dụng này? Hành động này không thể hoàn tác.",
+            confirmText: "Xóa",
+            cancelText: "Hủy"
+        });
     };
 
     // --- PROFILE ACTIONS ---
@@ -236,6 +245,14 @@ const Dashboard = () => {
                     </motion.div>
                 </div>
             )}
+
+            {/* Confirm Modal */}
+            <ConfirmModal
+                isOpen={showConfirm}
+                onClose={close}
+                onConfirm={confirmAction}
+                {...confirmConfig}
+            />
         </div>
     );
 };
