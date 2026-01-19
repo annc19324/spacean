@@ -107,5 +107,11 @@ git push
 - Cập nhật cả Backend (Controller) và Frontend (Register page) để đồng bộ quy tắc xác thực.
 - Khắc phục lỗi tương thích Prisma 7 bằng cách hạ cấp xuống Prisma 6.2.1 để đảm bảo tính ổn định với cấu hình hiện tại.
 
+## 10. Hoàn thiện Quản lý Ứng dụng (CRUD)
+- Triển khai logic Thêm, Sửa, Xóa ứng dụng ngay trong trang Dashboard của người dùng.
+- Tích hợp Modal Form với validation và xử lý API (POST/PUT/DELETE).
+- Hỗ trợ phân loại linh hoạt giữa Web (dùng Link) và App (dùng Link tải về).
+- Cập nhật giao diện Dashboard để đồng bộ dữ liệu ngay lập tức sau khi thay đổi.
+
 ---
 *Ghi chú: Nhật ký này sẽ được cập nhật khi có các lệnh quan trọng tiếp theo.*

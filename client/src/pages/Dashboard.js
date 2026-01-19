@@ -5,31 +5,41 @@ import { motion } from 'framer-motion';
 import { Plus, Trash2, Edit3, Settings, ShieldCheck, User as UserIcon } from 'lucide-react';
 
 const Dashboard = () => {
-    const { user, token } = useAuth();
     const [apps, setApps] = useState([]);
     const [pendingUsers, setPendingUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const config = { headers: { Authorization: `Bearer ${token}` } };
+    // Modal & Form state
+    const [showModal, setShowModal] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [currentAppId, setCurrentAppId] = useState(null);
+    const [formData, setFormData] = useState({
+        name: '',
+        description: '',
+        type: 'WEB',
+        link: '',
+        downloadUrl: '',
+        imageUrl: ''
+    });
 
-                // Fetch User's apps
-                const appsRes = await axios.get('http://localhost:5000/api/apps/my-apps', config);
-                setApps(appsRes.data);
+    const fetchData = async () => {
+        try {
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            const appsRes = await axios.get('http://localhost:5000/api/apps/my-apps', config);
+            setApps(appsRes.data);
 
-                // If Admin, fetch pending users
-                if (user.role === 'ADMIN') {
-                    const usersRes = await axios.get('http://localhost:5000/api/admin/pending-users', config);
-                    setPendingUsers(usersRes.data);
-                }
-            } catch (err) {
-                console.error("Lỗi tải dữ liệu Dashboard");
-            } finally {
-                setLoading(false);
+            if (user.role === 'ADMIN') {
+                const usersRes = await axios.get('http://localhost:5000/api/admin/pending-users', config);
+                setPendingUsers(usersRes.data);
             }
-        };
+        } catch (err) {
+            console.error("Lỗi tải dữ liệu Dashboard");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         if (user) fetchData();
     }, [user, token]);
 
@@ -41,6 +51,54 @@ const Dashboard = () => {
             alert("Đã phê duyệt người dùng!");
         } catch (err) {
             alert("Lỗi phê duyệt");
+        }
+    };
+
+    const handleOpenModal = (app = null) => {
+        if (app) {
+            setIsEditing(true);
+            setCurrentAppId(app.id);
+            setFormData({
+                name: app.name,
+                description: app.description || '',
+                type: app.type,
+                link: app.link || '',
+                downloadUrl: app.downloadUrl || '',
+                imageUrl: app.imageUrl || ''
+            });
+        } else {
+            setIsEditing(false);
+            setCurrentAppId(null);
+            setFormData({ name: '', description: '', type: 'WEB', link: '', downloadUrl: '', imageUrl: '' });
+        }
+        setShowModal(true);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            if (isEditing) {
+                await axios.put(`http://localhost:5000/api/apps/${currentAppId}`, formData, config);
+            } else {
+                await axios.post('http://localhost:5000/api/apps', formData, config);
+            }
+            setShowModal(false);
+            fetchData();
+        } catch (err) {
+            alert("Lỗi khi lưu ứng dụng");
+        }
+    };
+
+    const handleDelete = async (id) => {
+        if (window.confirm("Bạn có chắc chắn muốn xóa không gian này không?")) {
+            try {
+                const config = { headers: { Authorization: `Bearer ${token}` } };
+                await axios.delete(`http://localhost:5000/api/apps/${id}`, config);
+                fetchData();
+            } catch (err) {
+                alert("Lỗi khi xóa");
+            }
         }
     };
 
@@ -99,7 +157,7 @@ const Dashboard = () => {
                         <Settings />
                         <h2 style={{ fontSize: '1.5rem' }}>Ứng dụng của bạn</h2>
                     </div>
-                    <button className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <button onClick={() => handleOpenModal()} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <Plus size={18} /> Đăng ứng dụng mới
                     </button>
                 </div>
@@ -118,10 +176,10 @@ const Dashboard = () => {
                                     <span>Likes: {app.likes}</span>
                                 </div>
                                 <div style={{ display: 'flex', gap: '10px' }}>
-                                    <button style={{ flex: 1, padding: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
+                                    <button onClick={() => handleOpenModal(app)} style={{ flex: 1, padding: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'white', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px', cursor: 'pointer' }}>
                                         <Edit3 size={16} /> Sửa
                                     </button>
-                                    <button style={{ padding: '8px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', color: '#ef4444', borderRadius: '6px' }}>
+                                    <button onClick={() => handleDelete(app.id)} style={{ padding: '8px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', color: '#ef4444', borderRadius: '6px', cursor: 'pointer' }}>
                                         <Trash2 size={16} />
                                     </button>
                                 </div>
@@ -130,6 +188,51 @@ const Dashboard = () => {
                     )}
                 </div>
             </section>
+
+            {/* Application Modal */}
+            {showModal && (
+                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px' }}>
+                    <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass-card" style={{ width: '100%', maxWidth: '500px', padding: '30px', maxHeight: '90vh', overflowY: 'auto' }}>
+                        <h2 style={{ marginBottom: '25px' }}>{isEditing ? 'Cập nhật ứng dụng' : 'Đăng ứng dụng mới'}</h2>
+                        <form onSubmit={handleSubmit}>
+                            <div style={{ marginBottom: '15px' }}>
+                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Tên ứng dụng *</label>
+                                <input required style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white' }} value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
+                            </div>
+                            <div style={{ marginBottom: '15px' }}>
+                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Mô tả ngắn</label>
+                                <textarea style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white', height: '80px' }} value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
+                            </div>
+                            <div style={{ marginBottom: '15px' }}>
+                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Loại hình</label>
+                                <select style={{ width: '100%', background: 'rgba(255,255,255,0.1)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white' }} value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value })}>
+                                    <option value="WEB" style={{ background: '#05070a' }}>Trang Web (Link)</option>
+                                    <option value="APP" style={{ background: '#05070a' }}>Ứng dụng (Tải về)</option>
+                                </select>
+                            </div>
+                            {formData.type === 'WEB' ? (
+                                <div style={{ marginBottom: '15px' }}>
+                                    <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Đường dẫn Web (URL)</label>
+                                    <input style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white' }} value={formData.link} onChange={e => setFormData({ ...formData, link: e.target.value })} />
+                                </div>
+                            ) : (
+                                <div style={{ marginBottom: '15px' }}>
+                                    <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Link tải xuống</label>
+                                    <input style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white' }} value={formData.downloadUrl} onChange={e => setFormData({ ...formData, downloadUrl: e.target.value })} />
+                                </div>
+                            )}
+                            <div style={{ marginBottom: '25px' }}>
+                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Link ảnh minh họa (URL)</label>
+                                <input style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white' }} value={formData.imageUrl} onChange={e => setFormData({ ...formData, imageUrl: e.target.value })} />
+                            </div>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                <button type="button" onClick={() => setShowModal(false)} style={{ flex: 1, padding: '12px', background: 'transparent', border: '1px solid var(--glass-border)', color: 'white', borderRadius: '10px', cursor: 'pointer' }}>Hủy</button>
+                                <button type="submit" className="btn-primary" style={{ flex: 1 }}>{isEditing ? 'Lưu thay đổi' : 'Đăng ngay'}</button>
+                            </div>
+                        </form>
+                    </motion.div>
+                </div>
+            )}
         </div>
     );
 };
