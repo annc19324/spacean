@@ -13,14 +13,21 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
-    params: {
-        folder: 'spacean',
-        resource_type: 'auto',
-        allowed_formats: ['jpg', 'png', 'jpeg', 'gif', 'pdf', 'zip', 'apk']
-    },
+    params: async (req, file) => {
+        const isImage = file.mimetype.startsWith('image/');
+        return {
+            folder: 'spacean',
+            resource_type: isImage ? 'image' : 'raw', // APK, PDF, ZIP etc. need 'raw'
+            allowed_formats: isImage ? ['jpg', 'png', 'jpeg', 'gif', 'webp'] : undefined,
+            public_id: `${Date.now()}-${file.originalname.replace(/\.[^/.]+$/, '')}` // Remove extension
+        };
+    }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 100 * 1024 * 1024 } // 100MB limit
+});
 
 router.post('/', verifyToken, upload.single('file'), (req, res) => {
     if (!req.file) {
