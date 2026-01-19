@@ -31,13 +31,13 @@ const Home = () => {
                     animate={{ opacity: 1, y: 0 }}
                     style={{ fontSize: 'clamp(2rem, 8vw, 3.5rem)', fontWeight: 800, marginBottom: '15px' }}
                 >
-                    Khám Phá <span style={{ background: 'var(--accent-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Không Gian Của An</span>
+                    Khám Phá <span style={{ background: 'var(--accent-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>SpaceAn</span>
                 </motion.h1>
-                <p style={{ color: '#94a3b8', fontSize: '1.2rem' }}>Duyệt qua các không gian cá nhân và khám phá những ứng dụng độc đáo.</p>
+                <p style={{ color: '#94a3b8', fontSize: '1.2rem' }}>Duyệt qua các không gian cá nhân và khám phá những nội dung độc đáo.</p>
             </header>
 
             {loading ? (
-                <div style={{ textAlign: 'center' }}>Đang tải không gian...</div>
+                <div style={{ textAlign: 'center' }}>Đang tải thế giới giải trí...</div>
             ) : (
                 <div style={{
                     display: 'grid',

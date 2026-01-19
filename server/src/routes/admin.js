@@ -14,6 +14,7 @@ router.delete('/users/:id', verifyToken, isAdmin, adminController.deleteUserAdmi
 
 // App Management (Supreme Power)
 router.get('/apps', verifyToken, isAdmin, adminController.getAllAppsAdmin);
+router.put('/apps/:id', verifyToken, isAdmin, adminController.updateAppAdmin);
 router.delete('/apps/:id', verifyToken, isAdmin, adminController.deleteAppAdmin);
 
 module.exports = router;

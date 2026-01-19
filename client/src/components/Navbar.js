@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Rocket, LogIn, UserPlus, LogOut, LayoutDashboard } from 'lucide-react';
+import { Orbit, LogIn, UserPlus, LogOut, LayoutDashboard, LayoutGrid } from 'lucide-react';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
@@ -21,7 +21,7 @@ const Navbar = () => {
             gap: '15px'
         }}>
             <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Rocket size={32} color="#3b82f6" />
+                <Orbit size={32} color="#3b82f6" />
                 <span style={{ fontSize: '24px', fontWeight: 800, letterSpacing: '-1px' }}>
                     Space<span style={{ color: '#6d28d9' }}>An</span>
                 </span>
@@ -31,10 +31,10 @@ const Navbar = () => {
                 {user ? (
                     <>
                         <Link to={`/user/${user.username}`} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                            <Rocket size={18} /> My Space
+                            <LayoutGrid size={18} /> Hồ sơ cá nhân
                         </Link>
                         <Link to="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                            <LayoutDashboard size={18} /> Dashboard
+                            <LayoutDashboard size={18} /> Quản lý
                         </Link>
                         <button
                             onClick={logout}

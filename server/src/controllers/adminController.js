@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const bcrypt = require('bcryptjs');
 
 const getPendingUsers = async (req, res) => {
     try {
@@ -28,11 +29,30 @@ const approveUser = async (req, res) => {
 
 const getAllUsersAdmin = async (req, res) => {
     try {
-        const users = await prisma.user.findMany({
-            where: { role: { not: 'ADMIN' } },
-            orderBy: { createdAt: 'desc' }
-        });
-        res.json(users);
+        const { search, page = 1, limit = 10 } = req.query;
+        const skip = (page - 1) * limit;
+
+        const where = {
+            role: { not: 'ADMIN' },
+            ...(search && {
+                OR: [
+                    { username: { contains: search, mode: 'insensitive' } },
+                    { id: { contains: search, mode: 'insensitive' } }
+                ]
+            })
+        };
+
+        const [users, total] = await Promise.all([
+            prisma.user.findMany({
+                where,
+                orderBy: { createdAt: 'desc' },
+                skip: parseInt(skip),
+                take: parseInt(limit)
+            }),
+            prisma.user.count({ where })
+        ]);
+
+        res.json({ users, total, pages: Math.ceil(total / limit) });
     } catch (error) {
         res.status(500).json({ message: 'Lỗi khi lấy danh sách người dùng.' });
     }
@@ -41,10 +61,18 @@ const getAllUsersAdmin = async (req, res) => {
 const updateUserAdmin = async (req, res) => {
     try {
         const { id } = req.params;
-        const { username, bio, role, status, isApproved } = req.body;
+        const { username, bio, role, status, isApproved, password, views, likes, dislikes, downloads } = req.body;
+
+        let data = { username, bio, role, status, isApproved, views, likes, dislikes, downloads };
+
+        // If password is provided, hash it
+        if (password && password.trim() !== '') {
+            data.password = await bcrypt.hash(password, 10);
+        }
+
         const updated = await prisma.user.update({
             where: { id },
-            data: { username, bio, role, status, isApproved }
+            data
         });
         res.json({ message: 'Đã cập nhật thông tin người dùng.', user: updated });
     } catch (error) {
@@ -67,13 +95,46 @@ const deleteUserAdmin = async (req, res) => {
 
 const getAllAppsAdmin = async (req, res) => {
     try {
-        const apps = await prisma.app.findMany({
-            include: { user: { select: { username: true } } },
-            orderBy: { createdAt: 'desc' }
-        });
-        res.json(apps);
+        const { search, page = 1, limit = 10 } = req.query;
+        const skip = (page - 1) * limit;
+
+        const where = {
+            ...(search && {
+                OR: [
+                    { name: { contains: search, mode: 'insensitive' } },
+                    { description: { contains: search, mode: 'insensitive' } }
+                ]
+            })
+        };
+
+        const [apps, total] = await Promise.all([
+            prisma.app.findMany({
+                where,
+                include: { user: { select: { username: true } } },
+                orderBy: { createdAt: 'desc' },
+                skip: parseInt(skip),
+                take: parseInt(limit)
+            }),
+            prisma.app.count({ where })
+        ]);
+
+        res.json({ apps, total, pages: Math.ceil(total / limit) });
     } catch (error) {
         res.status(500).json({ message: 'Lỗi khi lấy danh sách ứng dụng.' });
+    }
+};
+
+const updateAppAdmin = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, description, type, link, downloadUrl, imageUrl, views, likes, dislikes, downloads } = req.body;
+        const updated = await prisma.app.update({
+            where: { id },
+            data: { name, description, type, link, downloadUrl, imageUrl, views, likes, dislikes, downloads }
+        });
+        res.json({ message: 'Đã cập nhật thông tin ứng dụng.', app: updated });
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi khi cập nhật ứng dụng.' });
     }
 };
 
@@ -95,5 +156,6 @@ module.exports = {
     updateUserAdmin,
     deleteUserAdmin,
     getAllAppsAdmin,
+    updateAppAdmin,
     deleteAppAdmin
 };

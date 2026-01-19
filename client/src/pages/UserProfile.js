@@ -19,9 +19,11 @@ const UserProfile = () => {
                 const res = await axios.get(`http://localhost:5000/api/users/${username}`);
                 setUserData(res.data);
 
-                // Explicitly increment user profile view once
-                if (res.data.id) {
+                // Increment view only once per session per user profile
+                const viewedKey = `viewed_${username}`;
+                if (res.data.id && !sessionStorage.getItem(viewedKey)) {
                     await axios.post(`http://localhost:5000/api/users/view/${res.data.id}`);
+                    sessionStorage.setItem(viewedKey, 'true');
                 }
             } catch (err) {
                 setError('Không tìm thấy người dùng hoặc có lỗi xảy ra.');
@@ -53,7 +55,7 @@ const UserProfile = () => {
         }
     };
 
-    if (loading) return <div style={{ textAlign: 'center', marginTop: '100px' }}>Đang tải không gian của {username}...</div>;
+    if (loading) return <div style={{ textAlign: 'center', marginTop: '100px' }}>Đang tải hồ sơ của {username}...</div>;
     if (error) return <div style={{ textAlign: 'center', marginTop: '100px', color: '#ef4444' }}>{error}</div>;
 
     return (
