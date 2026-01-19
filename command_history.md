@@ -1,4 +1,21 @@
-# Nhật ký Lệnh Dự án SpaceAn (Command HistoryLog)
+# Dự án SpaceAn - Không Gian Lưu Trữ Cá Nhân
+
+## 🔗 Tổng quan dự án
+**SpaceAn** là một hệ thống lưu trữ và quản lý ứng dụng/liên kết cá nhân, được xây dựng trên nền tảng Fullstack (ReactJS & NodeJS) với cơ sở dữ liệu PostgreSQL. Dự án tập trung vào tính cá nhân hóa cao nhưng có khả năng mở rộng để chia sẻ tài nguyên cho cộng đồng.
+
+### 🌟 Tính năng cốt lõi:
+- **Quản lý đa vai trò:**
+  - `Guest`: Xem hồ sơ người dùng, thống kê lượt truy cập, thích, tải xuống và truy cập ứng dụng.
+  - `User`: Quản lý không gian cá nhân (thêm/sửa/xóa App/Web), theo dõi các chỉ số tương tác.
+  - `Admin`: Phê duyệt người dùng đăng ký, quản lý toàn bộ hệ thống.
+- **Cơ chế Phê duyệt:** Người dùng đăng ký mới phải đợi quản trị viên phê duyệt mới có thể bắt đầu sử dụng các tính năng quản lý.
+- **Hệ thống Metrics:** Theo dõi lượt xem (views), thích (likes), không thích (dislikes) và lượt tải (downloads) cho cả hồ sơ cá nhân và từng ứng dụng riêng lẻ.
+- **Linh hoạt Content:** Hỗ trợ cả liên kết web đơn giản và ứng dụng có tệp tải xuống kèm ảnh minh họa.
+
+---
+
+# Nhật ký Lệnh Dự án SpaceAn (Command History Log)
+
 
 Tài liệu này ghi lại các bước thiết lập và lệnh quan trọng đã thực hiện trong dự án **SpaceAn - Không Gian Của An**.
 
