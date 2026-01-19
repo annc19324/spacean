@@ -32,9 +32,11 @@ const Navbar = () => {
                         <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '5px', textDecoration: 'none', color: 'white' }}>
                             <LayoutGrid size={18} /> Trang chủ
                         </a>
-                        <a href={`/user/${user.username}`} style={{ display: 'flex', alignItems: 'center', gap: '5px', textDecoration: 'none', color: 'white' }}>
-                            <LayoutGrid size={18} /> Hồ sơ cá nhân
-                        </a>
+                        {user.username ? (
+                            <a href={`/user/${user.username}`} style={{ display: 'flex', alignItems: 'center', gap: '5px', textDecoration: 'none', color: 'white' }}>
+                                <LayoutGrid size={18} /> Hồ sơ cá nhân
+                            </a>
+                        ) : null}
                         <a href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: '5px', textDecoration: 'none', color: 'white' }}>
                             <LayoutDashboard size={18} /> Quản lý
                         </a>
