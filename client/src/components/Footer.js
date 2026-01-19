@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Facebook, Instagram, Twitter, Youtube, Linkedin, Github, Globe } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Youtube, Linkedin, Github, Globe, Music } from 'lucide-react';
 
 const ICON_MAP = {
     facebook: Facebook,
     instagram: Instagram,
+    tiktok: Music,
     twitter: Twitter,
     youtube: Youtube,
     linkedin: Linkedin,
@@ -15,6 +16,7 @@ const ICON_MAP = {
 const COLOR_MAP = {
     facebook: '#1877F2',
     instagram: '#E4405F',
+    tiktok: '#000000',
     twitter: '#1DA1F2',
     youtube: '#FF0000',
     linkedin: '#0A66C2',

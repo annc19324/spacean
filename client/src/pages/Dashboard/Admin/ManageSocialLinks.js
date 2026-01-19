@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { Plus, Edit3, Trash2, Upload, Facebook, Instagram, Twitter, Youtube, Linkedin, Github, Globe } from 'lucide-react';
+import { Plus, Edit3, Trash2, Upload, Facebook, Instagram, Twitter, Youtube, Linkedin, Github, Globe, Music } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const PREDEFINED_ICONS = [
     { type: 'facebook', name: 'Facebook', Icon: Facebook, color: '#1877F2' },
     { type: 'instagram', name: 'Instagram', Icon: Instagram, color: '#E4405F' },
+    { type: 'tiktok', name: 'TikTok', Icon: Music, color: '#000000' },
     { type: 'twitter', name: 'Twitter/X', Icon: Twitter, color: '#1DA1F2' },
     { type: 'youtube', name: 'YouTube', Icon: Youtube, color: '#FF0000' },
     { type: 'linkedin', name: 'LinkedIn', Icon: Linkedin, color: '#0A66C2' },
