@@ -113,5 +113,23 @@ git push
 - Hỗ trợ phân loại linh hoạt giữa Web (dùng Link) và App (dùng Link tải về).
 - Cập nhật giao diện Dashboard để đồng bộ dữ liệu ngay lập tức sau khi thay đổi.
 
+## 11. Nâng cấp Bảo mật, Tương tác & Tải lên Tệp
+- Triển khai hiển thị/ẩn mật khẩu cho trang Đăng nhập và Đăng ký.
+- **Multer Integration**: Cấu hình Backend để hỗ trợ tải tệp (App/Ảnh) lên Server thay vì chỉ dùng liên kết URL.
+- **Interaction Restrictions**: Thêm model `Interaction` vào Prisma để giới hạn mỗi tài khoản chỉ được Like/Dislike 1 lần/mỗi App.
+- **Traffic Tracking Fix**: Tách biệt logic tăng lượt xem (POST) và lấy số liệu (GET) để tránh tình trạng tăng gấp đôi View trong môi trường React Dev Mode.
+
+## 12. Tối ưu UX/UI & Đa thiết bị (Responsive)
+- **React Hot Toast**: Thay thế hoàn toàn `alert()` và `confirm()` nguyên bản bằng hệ thống thông báo bay mượt mà, chuyên nghiệp.
+- **Mobile First Design**: Cấu hình CSS Responsive chung và tinh chỉnh Navbar, User Header, App Cards để hiển thị tối ưu trên mọi kích thước màn hình điện thoại.
+- **Metadata Enhancement**: Thêm ngày khởi tạo (createdAt) vào thông tin ứng dụng.
+
+## 13. Quản lý Phiên bản (Git) - Lần 3
+```powershell
+git add .
+git commit -m "Enhance security, file uploads, social limits, and responsive UI with Toast notifications"
+git push
+```
+
 ---
 *Ghi chú: Nhật ký này sẽ được cập nhật khi có các lệnh quan trọng tiếp theo.*

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -14,7 +15,7 @@ const Home = () => {
                 const res = await axios.get('http://localhost:5000/api/users');
                 setUsers(res.data);
             } catch (err) {
-                console.error("Lỗi lấy dữ liệu người dùng");
+                toast.error("Không thể tải danh sách người dùng");
             } finally {
                 setLoading(false);
             }
@@ -28,7 +29,7 @@ const Home = () => {
                 <motion.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '15px' }}
+                    style={{ fontSize: 'clamp(2rem, 8vw, 3.5rem)', fontWeight: 800, marginBottom: '15px' }}
                 >
                     Khám Phá <span style={{ background: 'var(--accent-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Không Gian Của An</span>
                 </motion.h1>

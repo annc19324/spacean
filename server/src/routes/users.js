@@ -4,5 +4,6 @@ const userController = require('../controllers/userController');
 
 router.get('/', userController.getAllUsers);
 router.get('/:username', userController.getPublicProfile);
+router.post('/view/:id', userController.incrementUserViews);
 
 module.exports = router;

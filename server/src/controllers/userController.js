@@ -15,12 +15,6 @@ const getPublicProfile = async (req, res) => {
 
         if (!user) return res.status(404).json({ message: 'Không tìm thấy người dùng này.' });
 
-        // Increment user views when profile is visited
-        await prisma.user.update({
-            where: { id: user.id },
-            data: { views: { increment: 1 } }
-        });
-
         // Hide sensitive info
         const { password, ...publicUser } = user;
         res.json(publicUser);
@@ -53,7 +47,21 @@ const getAllUsers = async (req, res) => {
     }
 };
 
+const incrementUserViews = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await prisma.user.update({
+            where: { id },
+            data: { views: { increment: 1 } }
+        });
+        res.json({ message: 'Đã tăng lượt xem hồ sơ' });
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi khi tăng lượt xem' });
+    }
+};
+
 module.exports = {
     getPublicProfile,
-    getAllUsers
+    getAllUsers,
+    incrementUserViews
 };

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Eye, Heart, Download, ExternalLink, Calendar, User, ThumbsUp, ThumbsDown } from 'lucide-react';
 
@@ -9,12 +11,18 @@ const UserProfile = () => {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const { token } = useAuth();
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
                 const res = await axios.get(`http://localhost:5000/api/users/${username}`);
                 setUserData(res.data);
+
+                // Explicitly increment user profile view once
+                if (res.data.id) {
+                    await axios.post(`http://localhost:5000/api/users/view/${res.data.id}`);
+                }
             } catch (err) {
                 setError('Không tìm thấy người dùng hoặc có lỗi xảy ra.');
             } finally {
@@ -25,13 +33,23 @@ const UserProfile = () => {
     }, [username]);
 
     const handleInteraction = async (appId, type) => {
+        if (['like', 'dislike'].includes(type) && !token) {
+            toast.error("Bạn cần đăng nhập để thực hiện hành động này.");
+            return;
+        }
         try {
-            await axios.post(`http://localhost:5000/api/apps/${type}/${appId}`);
-            // Refresh logic - ideally update local state
+            const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+            await axios.post(`http://localhost:5000/api/apps/${type}/${appId}`, {}, config);
+
+            // Re-fetch profile to get updated stats
             const res = await axios.get(`http://localhost:5000/api/users/${username}`);
             setUserData(res.data);
+            if (type === 'like') toast.success("Đã thích ứng dụng!");
+            if (type === 'dislike') toast.success("Đã không thích ứng dụng.");
         } catch (err) {
-            console.error("Lỗi tương tác:", err);
+            if (type !== 'view') {
+                toast.error(err.response?.data?.message || "Lỗi tương tác");
+            }
         }
     };
 
@@ -50,12 +68,12 @@ const UserProfile = () => {
                 <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'var(--accent-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     {userData.avatar ? <img src={userData.avatar} alt={userData.username} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} /> : <User size={60} color="white" />}
                 </div>
-                <div style={{ flex: 1 }}>
-                    <h1 style={{ fontSize: '2.5rem', marginBottom: '10px' }}>{userData.username}</h1>
+                <div style={{ flex: '1 1 300px' }}>
+                    <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', marginBottom: '10px' }}>{userData.username}</h1>
                     <p style={{ color: '#94a3b8', marginBottom: '15px' }}>{userData.bio || "Thành viên của SpaceAn."}</p>
-                    <div style={{ display: 'flex', gap: '20px', color: '#64748b', fontSize: '0.9rem' }}>
+                    <div style={{ display: 'flex', gap: '20px', color: '#64748b', fontSize: '0.9rem', flexWrap: 'wrap' }}>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><Calendar size={16} /> Tham gia: {new Date(userData.joinDate).toLocaleDateString('vi-VN')}</span>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><Eye size={16} /> {userData.views} lượt xem hồ sơ</span>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><Eye size={16} /> {userData.views} lượt xem</span>
                     </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
@@ -117,6 +135,7 @@ const UserProfile = () => {
                                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><ThumbsDown size={14} /> {app.dislikes}</span>
                                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Download size={14} /> {app.downloads}</span>
                             </div>
+                            <span>{new Date(app.createdAt).toLocaleDateString('vi-VN')}</span>
                         </div>
 
                         <div style={{ display: 'flex', gap: '10px' }}>

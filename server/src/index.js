@@ -5,6 +5,7 @@ const authRoutes = require('./routes/auth');
 const appRoutes = require('./routes/apps');
 const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/users');
+const uploadRoutes = require('./routes/upload');
 
 dotenv.config();
 
@@ -13,12 +14,14 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/apps', appRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/upload', uploadRoutes);
 
 app.get('/', (req, res) => {
     res.send('SpaceAn API is running...');

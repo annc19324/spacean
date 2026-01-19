@@ -95,11 +95,20 @@ const getAppStats = async (req, res) => {
         const { id } = req.params;
         const app = await prisma.app.findUnique({
             where: { id },
+            include: { user: { select: { username: true, joinDate: true, views: true, likes: true, dislikes: true, downloads: true } } }
         });
 
         if (!app) return res.status(404).json({ message: 'Ứng dụng không tìm thấy.' });
 
-        // Increment views for both app and the user who owns it
+        res.json(app);
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi khi lấy thông số ứng dụng.' });
+    }
+};
+
+const incrementAppViews = async (req, res) => {
+    try {
+        const { id } = req.params;
         await prisma.app.update({
             where: { id },
             data: {
@@ -109,51 +118,85 @@ const getAppStats = async (req, res) => {
                 }
             }
         });
-
-        const updatedApp = await prisma.app.findUnique({
-            where: { id },
-            include: { user: { select: { username: true, joinDate: true, views: true, likes: true, dislikes: true, downloads: true } } }
-        });
-
-        res.json(updatedApp);
+        res.json({ message: 'Đã tăng lượt xem ứng dụng' });
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi khi lấy thông số ứng dụng.' });
+        res.status(500).json({ message: 'Lỗi khi tăng lượt xem' });
     }
 };
 
 const likeApp = async (req, res) => {
     try {
         const { id } = req.params;
+        const userId = req.user.id;
+
+        if (!id || !userId) {
+            return res.status(400).json({ message: 'Thiếu thông tin ứng dụng hoặc người dùng.' });
+        }
+
+        const existing = await prisma.interaction.findUnique({
+            where: {
+                userId_appId: { userId, appId: id }
+            }
+        });
+
+        if (existing) {
+            return res.status(400).json({ message: 'Bạn đã thích hoặc không thích ứng dụng này rồi.' });
+        }
+
         const app = await prisma.app.update({
             where: { id },
             data: {
                 likes: { increment: 1 },
-                user: {
-                    update: { likes: { increment: 1 } }
-                }
+                user: { update: { likes: { increment: 1 } } }
             }
         });
+
+        await prisma.interaction.create({
+            data: { type: 'LIKE', userId, appId: id }
+        });
+
         res.json({ message: 'Đã thích ứng dụng!', likes: app.likes });
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi khi thích ứng dụng.' });
+        console.error("Internal Error in likeApp:", error);
+        res.status(500).json({ message: 'Lỗi server khi thực hiện thích ứng dụng.' });
     }
 };
 
 const dislikeApp = async (req, res) => {
     try {
         const { id } = req.params;
+        const userId = req.user.id;
+
+        if (!id || !userId) {
+            return res.status(400).json({ message: 'Thiếu thông tin ứng dụng hoặc người dùng.' });
+        }
+
+        const existing = await prisma.interaction.findUnique({
+            where: {
+                userId_appId: { userId, appId: id }
+            }
+        });
+
+        if (existing) {
+            return res.status(400).json({ message: 'Bạn đã thích hoặc không thích ứng dụng này rồi.' });
+        }
+
         const app = await prisma.app.update({
             where: { id },
             data: {
                 dislikes: { increment: 1 },
-                user: {
-                    update: { dislikes: { increment: 1 } }
-                }
+                user: { update: { dislikes: { increment: 1 } } }
             }
         });
+
+        await prisma.interaction.create({
+            data: { type: 'DISLIKE', userId, appId: id }
+        });
+
         res.json({ message: 'Đã không thích ứng dụng.', dislikes: app.dislikes });
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi khi không thích ứng dụng.' });
+        console.error("Internal Error in dislikeApp:", error);
+        res.status(500).json({ message: 'Lỗi server khi thực hiện không thích ứng dụng.' });
     }
 };
 
@@ -184,5 +227,6 @@ module.exports = {
     getAppStats,
     likeApp,
     dislikeApp,
-    downloadApp
+    downloadApp,
+    incrementAppViews
 };

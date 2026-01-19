@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Plus, Trash2, Edit3, Settings, ShieldCheck, User as UserIcon } from 'lucide-react';
 
 const Dashboard = () => {
+    const { user, token } = useAuth();
     const [apps, setApps] = useState([]);
     const [pendingUsers, setPendingUsers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -48,9 +50,9 @@ const Dashboard = () => {
             const config = { headers: { Authorization: `Bearer ${token}` } };
             await axios.put(`http://localhost:5000/api/admin/approve/${userId}`, {}, config);
             setPendingUsers(pendingUsers.filter(u => u.id !== userId));
-            alert("Đã phê duyệt người dùng!");
+            toast.success("Đã phê duyệt người dùng!");
         } catch (err) {
-            alert("Lỗi phê duyệt");
+            toast.error("Lỗi phê duyệt");
         }
     };
 
@@ -74,6 +76,28 @@ const Dashboard = () => {
         setShowModal(true);
     };
 
+    const handleFileUpload = async (e, field) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formDataFile = new FormData();
+        formDataFile.append('file', file);
+
+        try {
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            };
+            const res = await axios.post('http://localhost:5000/api/upload', formDataFile, config);
+            setFormData({ ...formData, [field]: res.data.url });
+            toast.success("Tải file lên thành công!");
+        } catch (err) {
+            toast.error("Lỗi khi tải file lên");
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -84,22 +108,41 @@ const Dashboard = () => {
                 await axios.post('http://localhost:5000/api/apps', formData, config);
             }
             setShowModal(false);
+            toast.success(isEditing ? "Đã cập nhật ứng dụng!" : "Đã đăng ứng dụng mới!");
             fetchData();
         } catch (err) {
-            alert("Lỗi khi lưu ứng dụng");
+            toast.error("Lỗi khi lưu ứng dụng");
         }
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm("Bạn có chắc chắn muốn xóa không gian này không?")) {
-            try {
-                const config = { headers: { Authorization: `Bearer ${token}` } };
-                await axios.delete(`http://localhost:5000/api/apps/${id}`, config);
-                fetchData();
-            } catch (err) {
-                alert("Lỗi khi xóa");
-            }
-        }
+        toast((t) => (
+            <span>
+                Bạn có chắc chắn muốn xóa không gian này?
+                <button
+                    onClick={async () => {
+                        toast.dismiss(t.id);
+                        try {
+                            const config = { headers: { Authorization: `Bearer ${token}` } };
+                            await axios.delete(`http://localhost:5000/api/apps/${id}`, config);
+                            toast.success("Đã xóa ứng dụng!");
+                            fetchData();
+                        } catch (err) {
+                            toast.error("Lỗi khi xóa");
+                        }
+                    }}
+                    style={{ marginLeft: '10px', background: '#ef4444', color: 'white', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer' }}
+                >
+                    Xóa
+                </button>
+                <button
+                    onClick={() => toast.dismiss(t.id)}
+                    style={{ marginLeft: '5px', background: 'transparent', color: 'white', border: '1px solid #ccc', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer' }}
+                >
+                    Hủy
+                </button>
+            </span>
+        ), { duration: 5000 });
     };
 
     if (loading) return <div style={{ textAlign: 'center', marginTop: '100px' }}>Đang kết nối không gian...</div>;
@@ -217,13 +260,22 @@ const Dashboard = () => {
                                 </div>
                             ) : (
                                 <div style={{ marginBottom: '15px' }}>
-                                    <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Link tải xuống</label>
-                                    <input style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white' }} value={formData.downloadUrl} onChange={e => setFormData({ ...formData, downloadUrl: e.target.value })} />
+                                    <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>File ứng dụng</label>
+                                    <div style={{ display: 'flex', gap: '10px' }}>
+                                        <input style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white' }} value={formData.downloadUrl} onChange={e => setFormData({ ...formData, downloadUrl: e.target.value })} placeholder="Dán link hoặc chọn file..." />
+                                        <input type="file" id="appField" hidden onChange={e => handleFileUpload(e, 'downloadUrl')} />
+                                        <label htmlFor="appField" style={{ background: 'rgba(255,255,255,0.1)', padding: '10px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem', display: 'flex', alignItems: 'center' }}>Chọn File</label>
+                                    </div>
                                 </div>
                             )}
                             <div style={{ marginBottom: '25px' }}>
-                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Link ảnh minh họa (URL)</label>
-                                <input style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white' }} value={formData.imageUrl} onChange={e => setFormData({ ...formData, imageUrl: e.target.value })} />
+                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem' }}>Ảnh minh họa</label>
+                                <div style={{ display: 'flex', gap: '10px' }}>
+                                    <input style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '10px', borderRadius: '8px', color: 'white' }} value={formData.imageUrl} onChange={e => setFormData({ ...formData, imageUrl: e.target.value })} placeholder="Dán link ảnh hoặc chọn file..." />
+                                    <input type="file" id="imageField" hidden accept="image/*" onChange={e => handleFileUpload(e, 'imageUrl')} />
+                                    <label htmlFor="imageField" style={{ background: 'rgba(255,255,255,0.1)', padding: '10px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem', display: 'flex', alignItems: 'center' }}>Chọn Ảnh</label>
+                                </div>
+                                {formData.imageUrl && <img src={formData.imageUrl} alt="Preview" style={{ marginTop: '10px', width: '100%', maxHeight: '100px', objectFit: 'cover', borderRadius: '8px' }} />}
                             </div>
                             <div style={{ display: 'flex', gap: '10px' }}>
                                 <button type="button" onClick={() => setShowModal(false)} style={{ flex: 1, padding: '12px', background: 'transparent', border: '1px solid var(--glass-border)', color: 'white', borderRadius: '10px', cursor: 'pointer' }}>Hủy</button>

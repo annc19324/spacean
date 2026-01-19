@@ -16,7 +16,9 @@ const Navbar = () => {
             top: 0,
             zIndex: 100,
             background: 'rgba(5, 7, 10, 0.8)',
-            backdropFilter: 'blur(10px)'
+            backdropFilter: 'blur(10px)',
+            flexWrap: 'wrap',
+            gap: '15px'
         }}>
             <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <Rocket size={32} color="#3b82f6" />
@@ -25,7 +27,7 @@ const Navbar = () => {
                 </span>
             </Link>
 
-            <div style={{ display: 'flex', gap: '25px', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
                 {user ? (
                     <>
                         <Link to={`/user/${user.username}`} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
