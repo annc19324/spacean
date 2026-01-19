@@ -1,21 +1,19 @@
 # SpaceAn Backend - Render Deployment Guide
 
-## 1. Tạo PostgreSQL Database trên Render
+# SpaceAn Backend - Deployment Guide (Neon + Render)
 
-1. Đăng nhập https://render.com
-2. New → PostgreSQL
-3. Name: `spacean-db`
-4. Database: `spacean`
-5. User: `spacean`
-6. Region: Singapore (gần VN nhất)
-7. Instance Type: Free
-8. Create Database
+## 1. Tạo PostgreSQL Database trên Neon Tech (Khuyên dùng)
 
-## 2. Lấy Database URL
+1. Truy cập https://console.neon.tech/app/projects/create
+2. Project Name: `spacean`
+3. Region: **Singapore** (quan trọng để nhanh)
+4. Create Project
+5. **Copy Connection String** (DATABASE_URL)
+   - Dạng: `postgres://user:pass@ep-xyz.aws.neon.tech/neondb?sslmode=require`
+   - Lưu lại để dùng cho bước sau.
 
-Sau khi tạo xong, vào tab "Connect":
-- Copy **Internal Database URL** (dạng: `postgresql://user:pass@hostname/database`)
-- Lưu lại để dùng trong bước tiếp theo
+## 2. (Bỏ qua bước này nếu dùng Neon)
+
 
 ## 3. Deploy Backend lên Render
 

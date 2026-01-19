@@ -146,5 +146,29 @@ git commit -m "Implement User settings (Profile/Password) and Supreme Admin powe
 git push
 ```
 
+## 16. Triển khai Hệ thống Footer & Cloudinary Storage
+- **Footer System**: Xây dựng hệ thống quản lý Social Links động ở Backend, có thể cấu hình từ Admin Dashboard và hiển thị ở client.
+- **Cloudinary Integration**: Tích hợp Cloudinary Storage để lưu trữ ảnh và file APK an toàn, chuyên nghiệp, thay vì lưu local file system.
+- **Environment Config**: Chuyển các thông tin nhạy cảm (Keys) vào .env để chuẩn bị cho môi trường Production.
+- **Logo & Branding**: Cập nhật nhận diện thương hiệu "SpaceAn" với logo và title mới.
+
+## 17. Tối ưu Tracking Views Chống Spam
+- Triển khai cơ chế Cooldown (Thời gian hồi) 15 phút cho mỗi lượt xem (View).
+- Sử dụng LocalStorage để tracking view dựa trên timestamp để đảm bảo tính công bằng và chính xác.
+- Loại bỏ hoàn toàn SessionStorage để view có thể tăng mỗi lần truy cập sau khi hết cooldown.
+- Fix lỗi tăng view kép do React.StrictMode.
+
+## 18. Chuẩn bị Deployment (Production Ready)
+- **Refactoring API Calls**: Chuyển đổi toàn bộ hardcoded URLs (`http://localhost:5000`) sang Dynamic Config (`getApiUrl`) để tương thích với môi trường Vercel/Render.
+- **Configuration Helpers**: Tạo helper `client/src/config/api.js` tự động nhận diện environment.
+- **Documentation**: Cập nhật toàn bộ tài liệu hướng dẫn (README.md) phản ánh kiến trúc Deploy: Frontend (Vercel) + Backend (Render) + DB (Neon PostgreSQL).
+
+## 19. Quản lý Phiên bản (Git) - Lần 5
+```powershell
+git add .
+git commit -m "Optimize View tracking, Integrate Cloudinary, and Prepare for Production Deployment (Vercel/Render)"
+git push
+```
+
 ---
 *Ghi chú: Nhật ký này sẽ được cập nhật khi có các lệnh quan trọng tiếp theo.*
