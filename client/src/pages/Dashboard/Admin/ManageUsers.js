@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Edit3, Ban, Trash2, Search, ChevronLeft, ChevronRight, Eye, ThumbsUp, ThumbsDown, Download, Lock } from 'lucide-react';
+import { Edit3, Ban, Trash2, Search, ChevronLeft, ChevronRight, Eye, ThumbsUp, Download, Lock } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const ManageUsers = ({ token }) => {
