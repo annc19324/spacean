@@ -5,6 +5,7 @@ const { verifyToken } = require('../middlewares/authMiddleware');
 
 router.get('/public', appController.getPublicApps); // For Guests to see
 router.get('/my-apps', verifyToken, appController.getUserApps); // For logged in users
+router.get('/my-interactions', verifyToken, appController.getMyInteractions); // Get user's interactions
 router.post('/', verifyToken, appController.createApp);
 router.put('/:id', verifyToken, appController.updateApp);
 router.delete('/:id', verifyToken, appController.deleteApp);

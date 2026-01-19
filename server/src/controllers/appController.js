@@ -140,9 +140,34 @@ const likeApp = async (req, res) => {
         });
 
         if (existing) {
-            return res.status(400).json({ message: 'Bạn đã thích hoặc không thích ứng dụng này rồi.' });
+            if (existing.type === 'LIKE') {
+                return res.status(400).json({ message: 'Bạn đã thích ứng dụng này rồi.' });
+            }
+
+            // Switch from DISLIKE to LIKE
+            await prisma.interaction.update({
+                where: { userId_appId: { userId, appId: id } },
+                data: { type: 'LIKE' }
+            });
+
+            const app = await prisma.app.update({
+                where: { id },
+                data: {
+                    likes: { increment: 1 },
+                    dislikes: { decrement: 1 },
+                    user: {
+                        update: {
+                            likes: { increment: 1 },
+                            dislikes: { decrement: 1 }
+                        }
+                    }
+                }
+            });
+
+            return res.json({ message: 'Đã chuyển sang thích!', likes: app.likes, dislikes: app.dislikes });
         }
 
+        // Create new LIKE
         const app = await prisma.app.update({
             where: { id },
             data: {
@@ -178,9 +203,34 @@ const dislikeApp = async (req, res) => {
         });
 
         if (existing) {
-            return res.status(400).json({ message: 'Bạn đã thích hoặc không thích ứng dụng này rồi.' });
+            if (existing.type === 'DISLIKE') {
+                return res.status(400).json({ message: 'Bạn đã ghét ứng dụng này rồi.' });
+            }
+
+            // Switch from LIKE to DISLIKE
+            await prisma.interaction.update({
+                where: { userId_appId: { userId, appId: id } },
+                data: { type: 'DISLIKE' }
+            });
+
+            const app = await prisma.app.update({
+                where: { id },
+                data: {
+                    likes: { decrement: 1 },
+                    dislikes: { increment: 1 },
+                    user: {
+                        update: {
+                            likes: { decrement: 1 },
+                            dislikes: { increment: 1 }
+                        }
+                    }
+                }
+            });
+
+            return res.json({ message: 'Đã chuyển sang ghét!', likes: app.likes, dislikes: app.dislikes });
         }
 
+        // Create new DISLIKE
         const app = await prisma.app.update({
             where: { id },
             data: {
@@ -282,6 +332,28 @@ const undislikeApp = async (req, res) => {
     }
 };
 
+const getMyInteractions = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const interactions = await prisma.interaction.findMany({
+            where: { userId },
+            select: { appId: true, type: true }
+        });
+
+        // Convert to object format { appId: type }
+        const interactionMap = {};
+        interactions.forEach(interaction => {
+            interactionMap[interaction.appId] = interaction.type;
+        });
+
+        res.json(interactionMap);
+    } catch (error) {
+        console.error("Error in getMyInteractions:", error);
+        res.status(500).json({ message: 'Lỗi server.' });
+    }
+};
+
+
 module.exports = {
     createApp,
     getUserApps,
@@ -294,5 +366,6 @@ module.exports = {
     unlikeApp,
     undislikeApp,
     downloadApp,
-    incrementAppViews
+    incrementAppViews,
+    getMyInteractions
 };

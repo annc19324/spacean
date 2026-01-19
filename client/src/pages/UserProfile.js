@@ -14,6 +14,7 @@ const UserProfile = () => {
     const [userInteractions, setUserInteractions] = useState({});
     const { token } = useAuth();
 
+
     useEffect(() => {
         const fetchProfile = async () => {
             try {
@@ -21,18 +22,15 @@ const UserProfile = () => {
                 setUserData(res.data);
 
                 // Load user interactions if logged in
-                if (token && res.data.apps) {
-                    const interactions = {};
-                    for (const app of res.data.apps) {
-                        try {
-                            const interactionRes = await axios.get(`http://localhost:5000/api/apps/stats/${app.id}`);
-                            // We'll need to add interaction info to the response. For now, store empty
-                            interactions[app.id] = null;
-                        } catch (e) {
-                            interactions[app.id] = null;
-                        }
+                if (token) {
+                    try {
+                        const config = { headers: { Authorization: `Bearer ${token}` } };
+                        const interactionsRes = await axios.get('http://localhost:5000/api/apps/my-interactions', config);
+                        setUserInteractions(interactionsRes.data);
+                    } catch (err) {
+                        console.error("Error loading interactions:", err);
+                        setUserInteractions({});
                     }
-                    setUserInteractions(interactions);
                 }
 
                 // Increment view only once per session per user profile
