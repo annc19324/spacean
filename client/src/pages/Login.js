@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { User, Lock, Eye, EyeOff } from 'lucide-react';
+import { getApiUrl } from '../config/api';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -16,7 +17,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('http://localhost:5000/api/auth/login', { username, password });
+            const res = await axios.post(getApiUrl('/api/auth/login'), { username, password });
             login(res.data.user, res.data.token);
             toast.success("Đăng nhập thành công!");
             window.location.href = '/';

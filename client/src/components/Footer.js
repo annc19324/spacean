@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { getApiUrl } from '../config/api';
 import { Facebook, Instagram, Twitter, Youtube, Linkedin, Github, Globe, Music } from 'lucide-react';
 
 const ICON_MAP = {
@@ -30,7 +31,7 @@ const Footer = () => {
     useEffect(() => {
         const fetchLinks = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/social-links');
+                const res = await axios.get(getApiUrl('/api/social-links'));
                 setSocialLinks(res.data);
             } catch (err) {
                 console.error('Error loading social links:', err);

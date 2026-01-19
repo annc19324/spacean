@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Eye, Heart, ThumbsUp, ThumbsDown, Download, ExternalLink, Calendar, User, ArrowLeft } from 'lucide-react';
+import { getApiUrl } from '../config/api';
 
 const AppDetails = () => {
     const { id } = useParams();
@@ -18,7 +19,7 @@ const AppDetails = () => {
     useEffect(() => {
         const fetchApp = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/apps/stats/${id}`);
+                const res = await axios.get(getApiUrl(`/api/apps/stats/${id}`));
                 setAppData(res.data);
 
                 // Increment view with 15-minute cooldown
@@ -29,7 +30,7 @@ const AppDetails = () => {
 
                 // Only increment if never viewed or 15 minutes have passed
                 if (!lastViewedTime || (currentTime - parseInt(lastViewedTime)) > fifteenMinutes) {
-                    await axios.post(`http://localhost:5000/api/apps/view/${id}`);
+                    await axios.post(getApiUrl(`/api/apps/view/${id}`));
                     localStorage.setItem(viewedKey, currentTime.toString());
                 }
 
@@ -37,7 +38,7 @@ const AppDetails = () => {
                 if (token) {
                     try {
                         const config = { headers: { Authorization: `Bearer ${token}` } };
-                        const interactionsRes = await axios.get('http://localhost:5000/api/apps/my-interactions', config);
+                        const interactionsRes = await axios.get(getApiUrl('/api/apps/my-interactions'), config);
                         setUserInteraction(interactionsRes.data[id] || null);
                     } catch (err) {
                         console.error("Error loading interaction:", err);
@@ -59,10 +60,10 @@ const AppDetails = () => {
         }
         try {
             const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
-            await axios.post(`http://localhost:5000/api/apps/${type}/${id}`, {}, config);
+            await axios.post(getApiUrl(`/api/apps/${type}/${id}`), {}, config);
 
             // Re-fetch app data
-            const res = await axios.get(`http://localhost:5000/api/apps/stats/${id}`);
+            const res = await axios.get(getApiUrl(`/api/apps/stats/${id}`));
             setAppData(res.data);
 
             // Update local interaction state
@@ -86,12 +87,12 @@ const AppDetails = () => {
 
     const handleDownload = async () => {
         if (!appData.downloadUrl) return;
-        await axios.post(`http://localhost:5000/api/apps/download/${id}`);
+        await axios.post(getApiUrl(`/api/apps/download/${id}`));
         window.open(appData.downloadUrl, '_blank');
         toast.success("Đang tải xuống...");
 
         // Refresh data to show updated download count
-        const res = await axios.get(`http://localhost:5000/api/apps/stats/${id}`);
+        const res = await axios.get(getApiUrl(`/api/apps/stats/${id}`));
         setAppData(res.data);
     };
 

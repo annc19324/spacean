@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import ConfirmModal from '../components/ConfirmModal';
 import { useConfirm } from '../hooks/useConfirm';
+import { getApiUrl } from '../config/api';
 
 // Refactored Sub-components
 import Sidebar from './Dashboard/Sidebar';
@@ -34,7 +35,7 @@ const Dashboard = () => {
     const fetchData = async () => {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const appsRes = await axios.get('http://localhost:5000/api/apps/my-apps', config);
+            const appsRes = await axios.get(getApiUrl('/api/apps/my-apps'), config);
             setApps(appsRes.data);
         } catch (err) {
             console.error("Lỗi tải dữ liệu Dashboard");
@@ -78,7 +79,7 @@ const Dashboard = () => {
         formDataFile.append('file', file);
         try {
             const config = { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } };
-            const res = await axios.post('http://localhost:5000/api/upload', formDataFile, config);
+            const res = await axios.post(getApiUrl('/api/upload'), formDataFile, config);
             setFormData({ ...formData, [field]: res.data.url });
             toast.success("Tải file lên thành công!");
         } catch (err) {
@@ -91,9 +92,9 @@ const Dashboard = () => {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
             if (isEditing) {
-                await axios.put(`http://localhost:5000/api/apps/${currentAppId}`, formData, config);
+                await axios.put(getApiUrl(`/api/apps/${currentAppId}`), formData, config);
             } else {
-                await axios.post('http://localhost:5000/api/apps', formData, config);
+                await axios.post(getApiUrl('/api/apps'), formData, config);
             }
             setShowModal(false);
             toast.success(isEditing ? "Đã cập nhật ứng dụng!" : "Đã đăng ứng dụng mới!");
@@ -107,7 +108,7 @@ const Dashboard = () => {
         confirm(async () => {
             try {
                 const config = { headers: { Authorization: `Bearer ${token}` } };
-                await axios.delete(`http://localhost:5000/api/apps/${id}`, config);
+                await axios.delete(getApiUrl(`/api/apps/${id}`), config);
                 toast.success("Đã xóa ứng dụng!");
                 fetchData();
             } catch (err) {
@@ -126,8 +127,8 @@ const Dashboard = () => {
         e.preventDefault();
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const res = await axios.put('http://localhost:5000/api/users/profile', profileData, config);
-            login(res.data.user, token); // Update context
+            const res = await axios.put(getApiUrl('/api/users/profile'), profileData, config);
+            login(res.data, token); // Update context
             toast.success("Đã cập nhật hồ sơ!");
         } catch (err) {
             toast.error(err.response?.data?.message || "Lỗi cập nhật");
@@ -148,8 +149,8 @@ const Dashboard = () => {
         }
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.put('http://localhost:5000/api/users/change-password', passwordData, config);
-            toast.success("Đã đổi mật khẩu!");
+            await axios.put(getApiUrl('/api/users/change-password'), passwordData, config);
+            toast.success("Đổi mật khẩu thành công!");
             setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
         } catch (err) {
             toast.error(err.response?.data?.message || "Lỗi đổi mật khẩu");

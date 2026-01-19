@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, Heart, Download, ExternalLink, Calendar } from 'lucide-react';
+import { getApiUrl } from '../config/api';
 
 const Home = () => {
     const [users, setUsers] = useState([]);
@@ -12,7 +13,7 @@ const Home = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/users');
+                const res = await axios.get(getApiUrl('/api/users'));
                 setUsers(res.data);
             } catch (err) {
                 toast.error("Không thể tải danh sách người dùng");

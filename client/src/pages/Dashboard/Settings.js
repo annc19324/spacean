@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { User as UserIcon, Lock, Eye, EyeOff, Camera } from 'lucide-react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { getApiUrl } from '../../config/api';
 
 const Settings = ({ profileData, setProfileData, handleProfileUpdate, passwordData, setPasswordData, handleChangePassword, token }) => {
     const [showOldPwd, setShowOldPwd] = useState(false);
@@ -19,7 +20,7 @@ const Settings = ({ profileData, setProfileData, handleProfileUpdate, passwordDa
 
         try {
             const config = { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } };
-            const res = await axios.post('http://localhost:5000/api/upload', formData, config);
+            const res = await axios.post(getApiUrl('/api/upload'), formData, config);
             setProfileData({ ...profileData, avatar: res.data.url });
             toast.success("Đã tải ảnh đại diện lên!");
         } catch (err) {

@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Lock, User, CheckCircle, Eye, EyeOff } from 'lucide-react';
+import { getApiUrl } from '../config/api';
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -30,7 +31,7 @@ const Register = () => {
         }
 
         try {
-            await axios.post('http://localhost:5000/api/auth/register', { username, password });
+            await axios.post(getApiUrl('/api/auth/register'), { username, password });
             setSuccess(true);
             toast.success("Đăng ký thành công! Hãy đợi Admin duyệt.");
             setTimeout(() => window.location.href = '/', 3000);

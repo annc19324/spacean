@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Eye, Heart, Download, ExternalLink, Calendar, User, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { getApiUrl } from '../config/api';
 
 const UserProfile = () => {
     const { username } = useParams();
@@ -18,14 +19,14 @@ const UserProfile = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/users/${username}`);
+                const res = await axios.get(getApiUrl(`/api/users/${username}`));
                 setUserData(res.data);
 
                 // Load user interactions if logged in
                 if (token) {
                     try {
                         const config = { headers: { Authorization: `Bearer ${token}` } };
-                        const interactionsRes = await axios.get('http://localhost:5000/api/apps/my-interactions', config);
+                        const interactionsRes = await axios.get(getApiUrl('/api/apps/my-interactions'), config);
                         setUserInteractions(interactionsRes.data);
                     } catch (err) {
                         console.error("Error loading interactions:", err);
@@ -42,7 +43,7 @@ const UserProfile = () => {
 
                     // Only increment if never viewed or 15 minutes have passed
                     if (!lastViewedTime || (currentTime - parseInt(lastViewedTime)) > fifteenMinutes) {
-                        await axios.post(`http://localhost:5000/api/users/view/${res.data.id}`);
+                        await axios.post(getApiUrl(`/api/users/view/${res.data.id}`));
                         localStorage.setItem(viewedKey, currentTime.toString());
                     }
                 }
@@ -62,10 +63,10 @@ const UserProfile = () => {
         }
         try {
             const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
-            await axios.post(`http://localhost:5000/api/apps/${type}/${appId}`, {}, config);
+            await axios.post(getApiUrl(`/api/apps/${type}/${appId}`), {}, config);
 
             // Re-fetch profile to get updated stats
-            const res = await axios.get(`http://localhost:5000/api/users/${username}`);
+            const res = await axios.get(getApiUrl(`/api/users/${username}`));
             setUserData(res.data);
 
             // Update local interaction state
