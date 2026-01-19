@@ -21,8 +21,17 @@ const AppDetails = () => {
                 const res = await axios.get(`http://localhost:5000/api/apps/stats/${id}`);
                 setAppData(res.data);
 
-                // Increment view every time
-                await axios.post(`http://localhost:5000/api/apps/view/${id}`);
+                // Increment view with 15-minute cooldown
+                const viewedKey = `viewed_app_${id}`;
+                const lastViewedTime = localStorage.getItem(viewedKey);
+                const currentTime = Date.now();
+                const fifteenMinutes = 15 * 60 * 1000; // 15 minutes in milliseconds
+
+                // Only increment if never viewed or 15 minutes have passed
+                if (!lastViewedTime || (currentTime - parseInt(lastViewedTime)) > fifteenMinutes) {
+                    await axios.post(`http://localhost:5000/api/apps/view/${id}`);
+                    localStorage.setItem(viewedKey, currentTime.toString());
+                }
 
                 // Load user interaction if logged in
                 if (token) {
