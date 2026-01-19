@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogIn, UserPlus, LogOut, LayoutDashboard, LayoutGrid, Orbit } from 'lucide-react';
+import { LogIn, UserPlus, LogOut, LayoutDashboard, LayoutGrid } from 'lucide-react';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
@@ -20,25 +19,25 @@ const Navbar = () => {
             flexWrap: 'wrap',
             gap: '15px'
         }}>
-            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Orbit size={32} color="#3b82f6" />
+            <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', color: 'white' }}>
+                <img src="/spacean.png" alt="SpaceAn" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
                 <span style={{ fontSize: '24px', fontWeight: 800, letterSpacing: '-1px' }}>
                     Space<span style={{ color: '#6d28d9' }}>An</span>
                 </span>
-            </Link>
+            </a>
 
             <div style={{ display: 'flex', gap: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
                 {user ? (
                     <>
-                        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '5px', textDecoration: 'none', color: 'white' }}>
                             <LayoutGrid size={18} /> Trang chủ
-                        </Link>
-                        <Link to={`/user/${user.username}`} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        </a>
+                        <a href={`/user/${user.username}`} style={{ display: 'flex', alignItems: 'center', gap: '5px', textDecoration: 'none', color: 'white' }}>
                             <LayoutGrid size={18} /> Hồ sơ cá nhân
-                        </Link>
-                        <Link to="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        </a>
+                        <a href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: '5px', textDecoration: 'none', color: 'white' }}>
                             <LayoutDashboard size={18} /> Quản lý
-                        </Link>
+                        </a>
                         <button
                             onClick={logout}
                             style={{
@@ -58,12 +57,12 @@ const Navbar = () => {
                     </>
                 ) : (
                     <>
-                        <Link to="/login" className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '8px 16px' }}>
+                        <a href="/login" className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '8px 16px', textDecoration: 'none' }}>
                             <LogIn size={18} /> Đăng nhập
-                        </Link>
-                        <Link to="/register" className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        </a>
+                        <a href="/register" className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '5px', textDecoration: 'none' }}>
                             <UserPlus size={18} /> Đăng ký
-                        </Link>
+                        </a>
                     </>
                 )}
             </div>
