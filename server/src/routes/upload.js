@@ -19,9 +19,8 @@ const storage = new CloudinaryStorage({
         const sanitizedOriginalName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
         return {
             folder: 'spacean',
-            resource_type: isImage ? 'image' : 'raw',
-            public_id: `${Date.now()}-${sanitizedOriginalName}`, // Keep sanitized name/ext for raw files
-            format: isImage ? 'png' : undefined, // Let images convert to png (optional), raw files keep original format
+            resource_type: 'auto', // Let Cloudinary decide
+            public_id: `${Date.now()}-${sanitizedOriginalName}`,
             use_filename: true,
             unique_filename: false,
         };
