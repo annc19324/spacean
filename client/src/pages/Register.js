@@ -33,7 +33,7 @@ const Register = () => {
             await axios.post('http://localhost:5000/api/auth/register', { username, password });
             setSuccess(true);
             toast.success("Đăng ký thành công! Hãy đợi Admin duyệt.");
-            setTimeout(() => navigate('/login'), 3000);
+            setTimeout(() => window.location.href = '/', 3000);
         } catch (err) {
             toast.error(err.response?.data?.message || 'Lỗi đăng ký');
         }

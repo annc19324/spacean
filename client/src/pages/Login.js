@@ -19,7 +19,7 @@ const Login = () => {
             const res = await axios.post('http://localhost:5000/api/auth/login', { username, password });
             login(res.data.user, res.data.token);
             toast.success("Đăng nhập thành công!");
-            navigate('/dashboard');
+            window.location.href = '/';
         } catch (err) {
             toast.error(err.response?.data?.message || 'Lỗi đăng nhập');
         }
