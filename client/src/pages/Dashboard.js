@@ -231,14 +231,12 @@ const Dashboard = () => {
                                 </div>
                             ) : (
                                 <div style={{ marginBottom: '15px' }}>
-                                    <label>File ứng dụng (Link tải)</label>
+                                    <label>Link tải ứng dụng (Google Drive/Dropbox)</label>
                                     <div style={{ display: 'flex', gap: '10px' }}>
-                                        <input style={{ flex: 1 }} value={formData.downloadUrl} onChange={e => setFormData({ ...formData, downloadUrl: e.target.value })} placeholder="Dán link Google Drive, Dropbox, MediaFire..." />
-                                        <input type="file" id="appField" hidden onChange={e => handleFileUpload(e, 'downloadUrl')} />
-                                        <label htmlFor="appField" className="btn-secondary" style={{ padding: '8px 15px', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>Upload (≤10MB)</label>
+                                        <input style={{ flex: 1 }} value={formData.downloadUrl} onChange={e => setFormData({ ...formData, downloadUrl: e.target.value })} placeholder="Dán link Google Drive công khai vào đây..." />
                                     </div>
                                     <small style={{ color: '#94a3b8', fontSize: '0.75rem', marginTop: '5px', display: 'block' }}>
-                                        *Khuyên dùng: Dán link Google Drive (đã mở quyền chia sẻ) để tải nhanh và ổn định hơn.
+                                        *Lưu ý: Hệ thống hiện tại chỉ hỗ trợ nhập link tải từ bên ngoài (Google Drive, Fshare, MediaFire...). Vui lòng không upload file trực tiếp.
                                     </small>
                                 </div>
                             )}
