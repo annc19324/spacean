@@ -16,16 +16,10 @@ const storage = new CloudinaryStorage({
     params: async (req, file) => {
         const isImage = file.mimetype.startsWith('image/');
         // Sanitize filename
-        let sanitizedOriginalName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
-
-        // TRICK: Rename .apk to .bin to bypass Cloudinary block
-        if (sanitizedOriginalName.endsWith('.apk')) {
-            sanitizedOriginalName += '.bin';
-        }
-
+        const sanitizedOriginalName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
         return {
             folder: 'spacean',
-            resource_type: isImage ? 'image' : 'raw', // Force raw for .bin
+            resource_type: isImage ? 'image' : 'auto',
             public_id: `${Date.now()}-${sanitizedOriginalName}`,
             use_filename: true,
             unique_filename: false,
@@ -52,18 +46,8 @@ router.post('/', verifyToken, (req, res) => {
             return res.status(400).json({ message: 'Không có file nào được tải lên.' });
         }
 
-        let url = req.file.path || req.file.secure_url;
-
-        // TRICK: Inject 'fl_attachment' flag to force download as .apk (restore original extension)
-        if (req.file.originalname.endsWith('.apk')) {
-            const cleanName = req.file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
-            // Check if URL contains /upload/ and insert flag after it
-            if (url.includes('/upload/')) {
-                url = url.replace('/upload/', `/upload/fl_attachment:${cleanName}/`);
-            }
-        }
-
-        res.json({ url });
+        // Cloudinary returns the URL in req.file.path or req.file.secure_url
+        res.json({ url: req.file.path || req.file.secure_url });
     });
 });
 
