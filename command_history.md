@@ -187,5 +187,18 @@ git commit -m "Finalize deployment: Fix build errors, cleanup code, and sync pro
 git push
 ```
 
+## 22. Hỗ trợ song song Link Web và Link Tải ứng dụng
+- Loại bỏ việc chọn loại hình (Loại hình web/app).
+- Cho phép người dùng nhập cả "Đường dẫn Web" và "Link tải ứng dụng" đồng thời.
+- Cập nhật giao diện Dashboard (User) và ManageApps (Admin) để hỗ trợ nhập cả 2 trường.
+- Đảm bảo trang chi tiết ứng dụng (AppDetails) và hồ sơ người dùng (UserProfile) hiển thị đầy đủ cả 2 nút truy cập nếu có dữ liệu.
+
+## 23. Quản lý Phiên bản (Git) - Lần 7
+```powershell
+git add .
+git commit -m "Allow both Web link and App download link for a single app entry"
+git push
+```
+
 ---
 *Ghi chú: Nhật ký này sẽ được cập nhật khi có các lệnh quan trọng tiếp theo.*

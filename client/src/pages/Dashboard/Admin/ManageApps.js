@@ -140,6 +140,14 @@ const ManageApps = ({ token }) => {
                                 <label>Mô tả</label>
                                 <textarea value={editingApp.description || ''} onChange={e => setEditingApp({ ...editingApp, description: e.target.value })} />
                             </div>
+                            <div style={{ gridColumn: '1 / -1' }}>
+                                <label>Đường dẫn Web (Link truy cập)</label>
+                                <input value={editingApp.link || ''} onChange={e => setEditingApp({ ...editingApp, link: e.target.value })} placeholder="https://..." />
+                            </div>
+                            <div style={{ gridColumn: '1 / -1' }}>
+                                <label>Link tải ứng dụng (Google Drive/Dropbox)</label>
+                                <input value={editingApp.downloadUrl || ''} onChange={e => setEditingApp({ ...editingApp, downloadUrl: e.target.value })} placeholder="Dán link Google Drive công khai vào đây..." />
+                            </div>
                             <div>
                                 <label>Views</label>
                                 <input type="number" value={editingApp.views} onChange={e => setEditingApp({ ...editingApp, views: parseInt(e.target.value) })} />

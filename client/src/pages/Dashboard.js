@@ -218,28 +218,18 @@ const Dashboard = () => {
                                 <textarea style={{ width: '100%' }} value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
                             </div>
                             <div style={{ marginBottom: '15px' }}>
-                                <label>Loại hình</label>
-                                <select style={{ width: '100%' }} value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value })}>
-                                    <option value="WEB" style={{ background: '#05070a' }}>Trang Web (Link)</option>
-                                    <option value="APP" style={{ background: '#05070a' }}>Ứng dụng (Tải về)</option>
-                                </select>
+                                <label>Đường dẫn Web (Link truy cập)</label>
+                                <input style={{ width: '100%' }} value={formData.link} onChange={e => setFormData({ ...formData, link: e.target.value })} placeholder="https://..." />
                             </div>
-                            {formData.type === 'WEB' ? (
-                                <div style={{ marginBottom: '15px' }}>
-                                    <label>Đường dẫn Web (URL)</label>
-                                    <input style={{ width: '100%' }} value={formData.link} onChange={e => setFormData({ ...formData, link: e.target.value })} />
+                            <div style={{ marginBottom: '15px' }}>
+                                <label>Link tải ứng dụng (Google Drive/Dropbox)</label>
+                                <div style={{ display: 'flex', gap: '10px' }}>
+                                    <input style={{ flex: 1 }} value={formData.downloadUrl} onChange={e => setFormData({ ...formData, downloadUrl: e.target.value })} placeholder="Dán link Google Drive công khai vào đây..." />
                                 </div>
-                            ) : (
-                                <div style={{ marginBottom: '15px' }}>
-                                    <label>Link tải ứng dụng (Google Drive/Dropbox)</label>
-                                    <div style={{ display: 'flex', gap: '10px' }}>
-                                        <input style={{ flex: 1 }} value={formData.downloadUrl} onChange={e => setFormData({ ...formData, downloadUrl: e.target.value })} placeholder="Dán link Google Drive công khai vào đây..." />
-                                    </div>
-                                    <small style={{ color: '#94a3b8', fontSize: '0.75rem', marginTop: '5px', display: 'block' }}>
-                                        *Lưu ý: Hệ thống hiện tại chỉ hỗ trợ nhập link tải từ bên ngoài (Google Drive, Fshare, MediaFire...). Vui lòng không upload file trực tiếp.
-                                    </small>
-                                </div>
-                            )}
+                                <small style={{ color: '#94a3b8', fontSize: '0.75rem', marginTop: '5px', display: 'block' }}>
+                                    *Lưu ý: Hệ thống hiện tại chỉ hỗ trợ nhập link tải từ bên ngoài (Google Drive, Fshare, MediaFire...). Vui lòng không upload file trực tiếp.
+                                </small>
+                            </div>
                             <div style={{ marginBottom: '25px' }}>
                                 <label>Ảnh minh họa</label>
                                 <div style={{ display: 'flex', gap: '10px' }}>
