@@ -74,47 +74,49 @@ const ManageApps = ({ token }) => {
                 </div>
             </div>
 
-            <div className="glass-card" style={{ padding: '0', overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                    <thead>
-                        <tr style={{ borderBottom: '1px solid var(--glass-border)' }}>
-                            <th style={{ padding: '15px 20px' }}>Ứng dụng</th>
-                            <th style={{ padding: '15px 20px' }}>Chủ sở hữu</th>
-                            <th style={{ padding: '15px 20px' }}>Chỉ số</th>
-                            <th style={{ padding: '15px 20px' }}>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {loading ? (
-                            <tr><td colSpan="4" style={{ padding: '40px', textAlign: 'center' }}>Đang tải...</td></tr>
-                        ) : apps.length === 0 ? (
-                            <tr><td colSpan="4" style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>Không tìm thấy ứng dụng nào.</td></tr>
-                        ) : (
-                            apps.map(app => (
-                                <tr key={app.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
-                                    <td style={{ padding: '15px 20px' }}>
-                                        <div style={{ fontWeight: 600 }}>{app.name}</div>
-                                        <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{app.type}</div>
-                                    </td>
-                                    <td style={{ padding: '15px 20px' }}>{app.user?.username}</td>
-                                    <td style={{ padding: '15px 20px' }}>
-                                        <div style={{ fontSize: '0.8rem', color: '#94a3b8', display: 'flex', gap: '10px' }}>
-                                            <span title="Views"><Eye size={12} /> {app.views}</span>
-                                            <span title="Likes"><ThumbsUp size={12} /> {app.likes}</span>
-                                            <span title="Downloads"><Download size={12} /> {app.downloads}</span>
-                                        </div>
-                                    </td>
-                                    <td style={{ padding: '15px 20px' }}>
-                                        <div style={{ display: 'flex', gap: '8px' }}>
-                                            <button onClick={() => { setEditingApp(app); setShowEditModal(true); }} className="btn-icon" title="Sửa"><Edit3 size={16} color="#3b82f6" /></button>
-                                            <button onClick={() => handleDelete(app.id)} className="btn-icon" title="Xóa"><Trash2 size={16} color="#ef4444" /></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+            <div className="glass-card" style={{ padding: '0' }}>
+                <div className="table-container">
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                        <thead>
+                            <tr style={{ borderBottom: '1px solid var(--glass-border)' }}>
+                                <th style={{ padding: '15px 20px' }}>Ứng dụng</th>
+                                <th style={{ padding: '15px 20px' }}>Chủ sở hữu</th>
+                                <th style={{ padding: '15px 20px' }}>Chỉ số</th>
+                                <th style={{ padding: '15px 20px' }}>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loading ? (
+                                <tr><td colSpan="4" style={{ padding: '40px', textAlign: 'center' }}>Đang tải...</td></tr>
+                            ) : apps.length === 0 ? (
+                                <tr><td colSpan="4" style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>Không tìm thấy ứng dụng nào.</td></tr>
+                            ) : (
+                                apps.map(app => (
+                                    <tr key={app.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
+                                        <td style={{ padding: '15px 20px' }}>
+                                            <div style={{ fontWeight: 600 }}>{app.name}</div>
+                                            <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{app.type}</div>
+                                        </td>
+                                        <td style={{ padding: '15px 20px' }}>{app.user?.username}</td>
+                                        <td style={{ padding: '15px 20px' }}>
+                                            <div style={{ fontSize: '0.8rem', color: '#94a3b8', display: 'flex', gap: '10px' }}>
+                                                <span title="Views"><Eye size={12} /> {app.views}</span>
+                                                <span title="Likes"><ThumbsUp size={12} /> {app.likes}</span>
+                                                <span title="Downloads"><Download size={12} /> {app.downloads}</span>
+                                            </div>
+                                        </td>
+                                        <td style={{ padding: '15px 20px' }}>
+                                            <div style={{ display: 'flex', gap: '8px' }}>
+                                                <button onClick={() => { setEditingApp(app); setShowEditModal(true); }} className="btn-icon" title="Sửa"><Edit3 size={16} color="#3b82f6" /></button>
+                                                <button onClick={() => handleDelete(app.id)} className="btn-icon" title="Xóa"><Trash2 size={16} color="#ef4444" /></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {/* Pagination */}

@@ -93,56 +93,58 @@ const ManageUsers = ({ token }) => {
                 </div>
             </div>
 
-            <div className="glass-card" style={{ padding: '0', overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                    <thead>
-                        <tr style={{ borderBottom: '1px solid var(--glass-border)' }}>
-                            <th style={{ padding: '15px 20px' }}>Người dùng</th>
-                            <th style={{ padding: '15px 20px' }}>Tương tác</th>
-                            <th style={{ padding: '15px 20px' }}>Trạng thái</th>
-                            <th style={{ padding: '15px 20px' }}>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {loading ? (
-                            <tr><td colSpan="4" style={{ padding: '40px', textAlign: 'center' }}>Đang tải...</td></tr>
-                        ) : users.length === 0 ? (
-                            <tr><td colSpan="4" style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>Không tìm thấy người dùng nào.</td></tr>
-                        ) : (
-                            users.map(u => (
-                                <tr key={u.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
-                                    <td style={{ padding: '15px 20px' }}>
-                                        <div style={{ fontWeight: 600 }}>{u.username}</div>
-                                        <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{u.role} | {u.id}</div>
-                                    </td>
-                                    <td style={{ padding: '15px 20px' }}>
-                                        <div style={{ fontSize: '0.8rem', color: '#94a3b8', display: 'flex', gap: '10px' }}>
-                                            <span title="Views"><Eye size={12} /> {u.views}</span>
-                                            <span title="Likes"><ThumbsUp size={12} /> {u.likes}</span>
-                                            <span title="Downloads"><Download size={12} /> {u.downloads}</span>
-                                        </div>
-                                    </td>
-                                    <td style={{ padding: '15px 20px' }}>
-                                        <span style={{
-                                            padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 800,
-                                            background: u.status === 'BANNED' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
-                                            color: u.status === 'BANNED' ? '#ef4444' : '#22c55e'
-                                        }}>
-                                            {u.status}
-                                        </span>
-                                    </td>
-                                    <td style={{ padding: '15px 20px' }}>
-                                        <div style={{ display: 'flex', gap: '8px' }}>
-                                            <button onClick={() => { setEditingUser({ ...u, password: '' }); setShowEditModal(true); }} className="btn-icon" title="Sửa"><Edit3 size={16} color="#3b82f6" /></button>
-                                            <button onClick={() => handleBanToggle(u)} className="btn-icon" title={u.status === 'BANNED' ? 'Mở cấm' : 'Cấm'}><Ban size={16} color={u.status === 'BANNED' ? '#22c55e' : '#ef4444'} /></button>
-                                            <button onClick={() => handleDelete(u.id)} className="btn-icon" title="Xóa"><Trash2 size={16} color="#ef4444" /></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+            <div className="glass-card" style={{ padding: '0' }}>
+                <div className="table-container">
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                        <thead>
+                            <tr style={{ borderBottom: '1px solid var(--glass-border)' }}>
+                                <th style={{ padding: '15px 20px' }}>Người dùng</th>
+                                <th style={{ padding: '15px 20px' }}>Tương tác</th>
+                                <th style={{ padding: '15px 20px' }}>Trạng thái</th>
+                                <th style={{ padding: '15px 20px' }}>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loading ? (
+                                <tr><td colSpan="4" style={{ padding: '40px', textAlign: 'center' }}>Đang tải...</td></tr>
+                            ) : users.length === 0 ? (
+                                <tr><td colSpan="4" style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>Không tìm thấy người dùng nào.</td></tr>
+                            ) : (
+                                users.map(u => (
+                                    <tr key={u.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
+                                        <td style={{ padding: '15px 20px' }}>
+                                            <div style={{ fontWeight: 600 }}>{u.username}</div>
+                                            <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{u.role} | {u.id}</div>
+                                        </td>
+                                        <td style={{ padding: '15px 20px' }}>
+                                            <div style={{ fontSize: '0.8rem', color: '#94a3b8', display: 'flex', gap: '10px' }}>
+                                                <span title="Views"><Eye size={12} /> {u.views}</span>
+                                                <span title="Likes"><ThumbsUp size={12} /> {u.likes}</span>
+                                                <span title="Downloads"><Download size={12} /> {u.downloads}</span>
+                                            </div>
+                                        </td>
+                                        <td style={{ padding: '15px 20px' }}>
+                                            <span style={{
+                                                padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 800,
+                                                background: u.status === 'BANNED' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+                                                color: u.status === 'BANNED' ? '#ef4444' : '#22c55e'
+                                            }}>
+                                                {u.status}
+                                            </span>
+                                        </td>
+                                        <td style={{ padding: '15px 20px' }}>
+                                            <div style={{ display: 'flex', gap: '8px' }}>
+                                                <button onClick={() => { setEditingUser({ ...u, password: '' }); setShowEditModal(true); }} className="btn-icon" title="Sửa"><Edit3 size={16} color="#3b82f6" /></button>
+                                                <button onClick={() => handleBanToggle(u)} className="btn-icon" title={u.status === 'BANNED' ? 'Mở cấm' : 'Cấm'}><Ban size={16} color={u.status === 'BANNED' ? '#22c55e' : '#ef4444'} /></button>
+                                                <button onClick={() => handleDelete(u.id)} className="btn-icon" title="Xóa"><Trash2 size={16} color="#ef4444" /></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {/* Pagination */}

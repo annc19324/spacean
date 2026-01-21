@@ -34,7 +34,7 @@ const Settings = ({ profileData, setProfileData, handleProfileUpdate, passwordDa
         <motion.div key="settings" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
             <h1 style={{ fontSize: '2rem', marginBottom: '30px' }}>Cài đặt tài khoản</h1>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '30px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px' }}>
                 {/* Profile Update */}
                 <section className="glass-card" style={{ padding: '30px' }}>
                     <h2 style={{ fontSize: '1.2rem', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>

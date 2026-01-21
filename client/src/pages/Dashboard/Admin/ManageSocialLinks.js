@@ -131,53 +131,55 @@ const ManageSocialLinks = ({ token }) => {
                         Chưa có liên kết nào. Hãy thêm liên kết mới!
                     </div>
                 ) : (
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <thead>
-                            <tr style={{ borderBottom: '1px solid var(--glass-border)' }}>
-                                <th style={{ textAlign: 'left', padding: '15px 10px', color: '#94a3b8' }}>Icon</th>
-                                <th style={{ textAlign: 'left', padding: '15px 10px', color: '#94a3b8' }}>Tên</th>
-                                <th style={{ textAlign: 'left', padding: '15px 10px', color: '#94a3b8' }}>Link</th>
-                                <th style={{ textAlign: 'center', padding: '15px 10px', color: '#94a3b8' }}>Thứ tự</th>
-                                <th style={{ textAlign: 'right', padding: '15px 10px', color: '#94a3b8' }}>Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {links.map(link => {
-                                const iconInfo = getIconComponent(link.iconType);
-                                const IconComponent = iconInfo?.Icon;
-                                return (
-                                    <tr key={link.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                                        <td style={{ padding: '15px 10px' }}>
-                                            {link.iconType === 'custom' ? (
-                                                <img src={link.iconUrl} alt={link.name} style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
-                                            ) : IconComponent ? (
-                                                <IconComponent size={24} color={iconInfo.color} />
-                                            ) : (
-                                                <Globe size={24} color="#64748b" />
-                                            )}
-                                        </td>
-                                        <td style={{ padding: '15px 10px' }}>{link.name}</td>
-                                        <td style={{ padding: '15px 10px' }}>
-                                            <a href={link.url} target="_blank" rel="noopener noreferrer" style={{ color: '#3b82f6', fontSize: '0.9rem' }}>
-                                                {link.url.length > 40 ? link.url.substring(0, 40) + '...' : link.url}
-                                            </a>
-                                        </td>
-                                        <td style={{ textAlign: 'center', padding: '15px 10px' }}>{link.order}</td>
-                                        <td style={{ padding: '15px 10px', textAlign: 'right' }}>
-                                            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                                                <button onClick={() => handleOpenModal(link)} className="btn-icon">
-                                                    <Edit3 size={16} color="#3b82f6" />
-                                                </button>
-                                                <button onClick={() => handleDelete(link.id)} className="btn-icon" style={{ border: '1px solid rgba(239, 68, 68, 0.2)' }}>
-                                                    <Trash2 size={16} color="#ef4444" />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
+                    <div className="table-container">
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr style={{ borderBottom: '1px solid var(--glass-border)' }}>
+                                    <th style={{ textAlign: 'left', padding: '15px 10px', color: '#94a3b8' }}>Icon</th>
+                                    <th style={{ textAlign: 'left', padding: '15px 10px', color: '#94a3b8' }}>Tên</th>
+                                    <th style={{ textAlign: 'left', padding: '15px 10px', color: '#94a3b8' }}>Link</th>
+                                    <th style={{ textAlign: 'center', padding: '15px 10px', color: '#94a3b8' }}>Thứ tự</th>
+                                    <th style={{ textAlign: 'right', padding: '15px 10px', color: '#94a3b8' }}>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {links.map(link => {
+                                    const iconInfo = getIconComponent(link.iconType);
+                                    const IconComponent = iconInfo?.Icon;
+                                    return (
+                                        <tr key={link.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                            <td style={{ padding: '15px 10px' }}>
+                                                {link.iconType === 'custom' ? (
+                                                    <img src={link.iconUrl} alt={link.name} style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
+                                                ) : IconComponent ? (
+                                                    <IconComponent size={24} color={iconInfo.color} />
+                                                ) : (
+                                                    <Globe size={24} color="#64748b" />
+                                                )}
+                                            </td>
+                                            <td style={{ padding: '15px 10px' }}>{link.name}</td>
+                                            <td style={{ padding: '15px 10px' }}>
+                                                <a href={link.url} target="_blank" rel="noopener noreferrer" style={{ color: '#3b82f6', fontSize: '0.9rem' }}>
+                                                    {link.url.length > 40 ? link.url.substring(0, 40) + '...' : link.url}
+                                                </a>
+                                            </td>
+                                            <td style={{ textAlign: 'center', padding: '15px 10px' }}>{link.order}</td>
+                                            <td style={{ padding: '15px 10px', textAlign: 'right' }}>
+                                                <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                                                    <button onClick={() => handleOpenModal(link)} className="btn-icon">
+                                                        <Edit3 size={16} color="#3b82f6" />
+                                                    </button>
+                                                    <button onClick={() => handleDelete(link.id)} className="btn-icon" style={{ border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+                                                        <Trash2 size={16} color="#ef4444" />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </div>
 

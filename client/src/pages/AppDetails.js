@@ -111,7 +111,7 @@ const AppDetails = () => {
                 className="glass-card"
                 style={{ padding: '40px' }}
             >
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '40px', marginBottom: '40px' }}>
+                <div className="responsive-grid" style={{ marginBottom: '40px' }}>
                     {/* App Image */}
                     <div>
                         <div style={{
@@ -145,7 +145,7 @@ const AppDetails = () => {
                         </p>
 
                         {/* Stats */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px', marginBottom: '30px' }}>
+                        <div className="stats-grid" style={{ marginBottom: '30px' }}>
                             <div className="glass-card" style={{ padding: '15px', textAlign: 'center' }}>
                                 <Eye size={20} color="#64748b" style={{ margin: '0 auto 8px' }} />
                                 <div style={{ fontSize: '1.5rem', fontWeight: 800 }}>{appData.views}</div>
@@ -185,10 +185,10 @@ const AppDetails = () => {
                                     justifyContent: 'center',
                                     gap: '8px',
                                     fontWeight: userInteraction === 'LIKE' ? '700' : '400',
-                                    fontSize: '1rem'
+                                    fontSize: '0.9rem'
                                 }}
                             >
-                                <ThumbsUp size={20} /> {userInteraction === 'LIKE' ? 'Đã thích' : 'Thích'}
+                                <ThumbsUp size={18} /> {userInteraction === 'LIKE' ? 'Đã thích' : 'Thích'}
                             </button>
                             <button
                                 onClick={() => handleInteraction(userInteraction === 'DISLIKE' ? 'undislike' : 'dislike')}
@@ -205,21 +205,21 @@ const AppDetails = () => {
                                     justifyContent: 'center',
                                     gap: '8px',
                                     fontWeight: userInteraction === 'DISLIKE' ? '700' : '400',
-                                    fontSize: '1rem'
+                                    fontSize: '0.9rem'
                                 }}
                             >
-                                <ThumbsDown size={20} /> {userInteraction === 'DISLIKE' ? 'Đã ghét' : 'Ghét'}
+                                <ThumbsDown size={18} /> {userInteraction === 'DISLIKE' ? 'Đã ghét' : 'Ghét'}
                             </button>
                         </div>
 
-                        <div style={{ display: 'flex', gap: '10px' }}>
+                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                             {appData.link && (
                                 <a
                                     href={appData.link}
                                     target="_blank"
                                     rel="noreferrer"
                                     className="btn-primary"
-                                    style={{ flex: 1, textAlign: 'center', padding: '15px', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                                    style={{ flex: '1 1 200px', textAlign: 'center', padding: '15px', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                                 >
                                     <ExternalLink size={20} /> Truy cập Web
                                 </a>
@@ -228,7 +228,7 @@ const AppDetails = () => {
                                 <button
                                     onClick={handleDownload}
                                     className="btn-primary"
-                                    style={{ flex: 1, padding: '15px', fontSize: '1rem', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                                    style={{ flex: '1 1 200px', padding: '15px', fontSize: '1rem', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                                 >
                                     <Download size={20} /> Tải App
                                 </button>
