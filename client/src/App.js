@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -10,6 +10,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import UserProfile from './pages/UserProfile';
 import AppDetails from './pages/AppDetails';
+import { initializeApi } from './config/api';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -19,6 +20,31 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
+  const [isApiReady, setIsApiReady] = useState(false);
+
+  useEffect(() => {
+    initializeApi().then(() => setIsApiReady(true));
+  }, []);
+
+  if (!isApiReady) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        background: '#0f172a',
+        color: '#fff',
+        fontFamily: 'sans-serif'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <h2>Connecting to SpaceAn...</h2>
+          <p style={{ opacity: 0.7, fontSize: '0.9rem' }}>Checking server status</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <AuthProvider>
       <Toaster position="top-right" toastOptions={{ style: { background: '#1e293b', color: '#fff', border: '1px solid var(--glass-border)' } }} />
