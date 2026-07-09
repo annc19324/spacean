@@ -100,15 +100,16 @@ const ManageUsers = ({ token }) => {
                             <tr style={{ borderBottom: '1px solid var(--glass-border)' }}>
                                 <th style={{ padding: '15px 20px' }}>Người dùng</th>
                                 <th style={{ padding: '15px 20px' }}>Tương tác</th>
+                                <th style={{ padding: '15px 20px' }}>Ngày tháng</th>
                                 <th style={{ padding: '15px 20px' }}>Trạng thái</th>
                                 <th style={{ padding: '15px 20px' }}>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
                             {loading ? (
-                                <tr><td colSpan="4" style={{ padding: '40px', textAlign: 'center' }}>Đang tải...</td></tr>
+                                <tr><td colSpan="5" style={{ padding: '40px', textAlign: 'center' }}>Đang tải...</td></tr>
                             ) : users.length === 0 ? (
-                                <tr><td colSpan="4" style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>Không tìm thấy người dùng nào.</td></tr>
+                                <tr><td colSpan="5" style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>Không tìm thấy người dùng nào.</td></tr>
                             ) : (
                                 users.map(u => (
                                     <tr key={u.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
@@ -122,6 +123,12 @@ const ManageUsers = ({ token }) => {
                                                 <span title="Likes"><ThumbsUp size={12} /> {u.likes}</span>
                                                 <span title="Downloads"><Download size={12} /> {u.downloads}</span>
                                             </div>
+                                        </td>
+                                        <td style={{ padding: '15px 20px', fontSize: '0.8rem', color: '#94a3b8' }}>
+                                            <div>Đăng ký: {new Date(u.createdAt).toLocaleDateString('vi-VN')}</div>
+                                            {u.isApproved && u.approvedAt && (
+                                                <div style={{ color: '#22c55e', marginTop: '4px' }}>Duyệt: {new Date(u.approvedAt).toLocaleDateString('vi-VN')}</div>
+                                            )}
                                         </td>
                                         <td style={{ padding: '15px 20px' }}>
                                             <span style={{

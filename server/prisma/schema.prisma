@@ -20,6 +20,7 @@ model User {
   avatar        String?
   bio           String?
   joinDate      DateTime  @default(now())
+  approvedAt    DateTime?
   
   views         Int       @default(0)
   likes         Int       @default(0)

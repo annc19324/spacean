@@ -19,7 +19,10 @@ const approveUser = async (req, res) => {
         const { id } = req.params;
         await prisma.user.update({
             where: { id },
-            data: { isApproved: true }
+            data: { 
+                isApproved: true,
+                approvedAt: new Date()
+            }
         });
         res.json({ message: 'Đã phê duyệt người dùng.' });
     } catch (error) {
